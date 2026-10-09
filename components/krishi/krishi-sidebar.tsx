@@ -18,6 +18,8 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { Language } from './krishi-topbar'
+import { HarvestLot, cropsList } from '@/lib/market-service'
+import { useTranslation } from '@/lib/translations'
 
 export type NavItem =
   | 'dashboard'
@@ -37,6 +39,7 @@ interface SidebarProps {
   currentLang: Language
   onLangChange: (lang: Language) => void
   onOpenSwitchLot: () => void
+  activeLot?: HarvestLot
 }
 
 export function KrishiSidebar({
@@ -45,25 +48,29 @@ export function KrishiSidebar({
   currentLang,
   onLangChange,
   onOpenSwitchLot,
+  activeLot,
 }: SidebarProps) {
-  const navItems: { id: NavItem; labelEn: string; labelGu: string; labelHi: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { id: 'dashboard', labelEn: 'Dashboard', labelGu: 'ડેશબોર્ડ', labelHi: 'डैशबोर्ड', icon: LayoutDashboard },
-    { id: 'my-crop', labelEn: 'My Crop', labelGu: 'મારો પાક', labelHi: 'मेरी फसल', icon: Sprout },
-    { id: 'market-intel', labelEn: 'Market Intelligence', labelGu: 'બજાર ઇન્ટેલિજન્સ', labelHi: 'मार्केट इंटेलिजेंस', icon: TrendingUp },
-    { id: 'buyers', labelEn: 'Buyers', labelGu: 'ખરીદદારો', labelHi: 'खरीदार', icon: Users },
-    { id: 'sell-vs-wait', labelEn: 'Sell Now vs Wait?', labelGu: 'હમણાં વેચો કે રાહ જુઓ?', labelHi: 'अभी बेचें या रुकें?', icon: Hourglass },
-    { id: 'net-calculator', labelEn: 'Net Calculator', labelGu: 'નેટ કેલ્ક્યુલેટર', labelHi: 'नेट कैलकुलेटर', icon: Calculator },
-    { id: 'logistics', labelEn: 'Logistics & Storage', labelGu: 'પરિવહન અને સંગ્રહ', labelHi: 'लॉजिस्टिक्स व भंडारण', icon: Truck },
-    { id: 'evidence', labelEn: 'Evidence & Sources', labelGu: 'પુરાવા અને સ્ત્રોતો', labelHi: 'साक्ष्य व स्रोत', icon: ShieldCheck },
-    { id: 'fpo', labelEn: 'FPO Dashboard', labelGu: 'FPO ડેશબોર્ડ', labelHi: 'FPO डैशबोर्ड', icon: Building2 },
-    { id: 'alerts', labelEn: 'Alerts', labelGu: 'ચેતવણીઓ', labelHi: 'अलर्ट व सूचनाएं', icon: Bell },
+  const t = useTranslation(currentLang)
+
+  const navItems: { id: NavItem; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+    { id: 'dashboard', label: t.dashboard, icon: LayoutDashboard },
+    { id: 'my-crop', label: t.myCrop, icon: Sprout },
+    { id: 'market-intel', label: t.marketIntel, icon: TrendingUp },
+    { id: 'buyers', label: t.buyers, icon: Users },
+    { id: 'sell-vs-wait', label: t.sellVsWait, icon: Hourglass },
+    { id: 'logistics', label: t.logistics, icon: Truck },
+    { id: 'evidence', label: t.evidence, icon: ShieldCheck },
+    { id: 'fpo', label: t.fpo, icon: Building2 },
+    { id: 'alerts', label: t.alerts, icon: Bell },
   ]
 
-  const getLabel = (item: typeof navItems[0]) => {
-    if (currentLang === 'gu') return item.labelGu
-    if (currentLang === 'hi') return item.labelHi
-    return item.labelEn
-  }
+  const cropLabel = activeLot
+    ? (currentLang === 'gu'
+        ? (cropsList.find((c) => c.id === activeLot.baseCrop)?.labelGu || activeLot.crop)
+        : currentLang === 'hi'
+        ? (cropsList.find((c) => c.id === activeLot.baseCrop)?.labelHi || activeLot.crop)
+        : activeLot.crop)
+    : 'Tomato'
 
   return (
     <aside className="w-64 bg-[#fbfdfa] border-r border-[#e0e9df] flex flex-col h-screen select-none shrink-0 sticky top-0">
@@ -78,7 +85,7 @@ export function KrishiSidebar({
             <span className="font-bold text-lg tracking-tight text-[#1f6645]">Intel</span>
           </div>
           <span className="text-[9px] font-semibold tracking-wider text-[#647c6e] uppercase -mt-0.5">
-            MANDI INTEL & BAHI-KHATA
+            {t.appSubtitle}
           </span>
         </div>
       </div>
@@ -95,8 +102,8 @@ export function KrishiSidebar({
             />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-sm font-bold text-[#152e20] truncate">Ramesh Patel</span>
-            <span className="text-[11px] text-[#55695d]">Anand, Gujarat</span>
+            <span className="text-sm font-bold text-[#152e20] truncate">{t.kisanProfile}</span>
+            <span className="text-[11px] text-[#55695d] truncate">{t.kisanLocation}</span>
           </div>
         </div>
 
@@ -107,7 +114,11 @@ export function KrishiSidebar({
         >
           <div className="flex items-center gap-1.5 truncate">
             <span className="w-2 h-2 rounded-full bg-[#1b7340] shrink-0"></span>
-            <span className="truncate">Tomato • 500 kg • Grade A</span>
+            <span className="truncate">
+              {activeLot
+                ? `${cropLabel.split('(')[0].trim()} • ${activeLot.quantity} kg • ${activeLot.grade}`
+                : 'Tomato • 500 kg • Grade A'}
+            </span>
           </div>
           <ChevronRight className="w-3.5 h-3.5 text-[#527e65] group-hover:translate-x-0.5 transition-transform shrink-0" />
         </button>
@@ -130,7 +141,7 @@ export function KrishiSidebar({
               }`}
             >
               <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-[#506e5b]'}`} />
-              <span className="truncate text-left">{getLabel(item)}</span>
+              <span className="truncate text-left">{item.label}</span>
             </button>
           )
         })}
@@ -152,19 +163,19 @@ export function KrishiSidebar({
           <div className="flex items-center gap-1 text-[10px] font-bold">
             <button
               onClick={() => onLangChange('en')}
-              className={`px-1.5 py-0.5 rounded ${currentLang === 'en' ? 'bg-[#184e36] text-white' : 'text-[#4d6657]'}`}
+              className={`px-1.5 py-0.5 rounded transition-all ${currentLang === 'en' ? 'bg-[#184e36] text-white' : 'text-[#4d6657] hover:bg-[#d6e5d3]'}`}
             >
               EN
             </button>
             <button
               onClick={() => onLangChange('gu')}
-              className={`px-1.5 py-0.5 rounded ${currentLang === 'gu' ? 'bg-[#184e36] text-white' : 'text-[#4d6657]'}`}
+              className={`px-1.5 py-0.5 rounded transition-all ${currentLang === 'gu' ? 'bg-[#184e36] text-white' : 'text-[#4d6657] hover:bg-[#d6e5d3]'}`}
             >
               ગુજ
             </button>
             <button
               onClick={() => onLangChange('hi')}
-              className={`px-1.5 py-0.5 rounded ${currentLang === 'hi' ? 'bg-[#184e36] text-white' : 'text-[#4d6657]'}`}
+              className={`px-1.5 py-0.5 rounded transition-all ${currentLang === 'hi' ? 'bg-[#184e36] text-white' : 'text-[#4d6657] hover:bg-[#d6e5d3]'}`}
             >
               हिंदी
             </button>

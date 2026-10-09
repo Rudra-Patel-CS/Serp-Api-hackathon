@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Search, Bell, TrendingUp, TrendingDown, Minus, Check, Sparkles, MapPin } from 'lucide-react'
+import { Search, Bell } from 'lucide-react'
 import Image from 'next/image'
+import { useTranslation, Language } from '@/lib/translations'
 
-export type Language = 'en' | 'gu' | 'hi'
+export type { Language }
 
 interface TopbarProps {
   currentLang: Language
@@ -20,12 +21,13 @@ export function KrishiTopbar({
   onSearchQuery,
 }: TopbarProps) {
   const [search, setSearch] = useState('')
+  const t = useTranslation(currentLang)
 
   const tickers = [
-    { mandi: 'Ahmedabad', price: '₹2,850', trend: 'up', change: '+2.4%' },
-    { mandi: 'Surat', price: '₹2,740', trend: 'down', change: '-1.8%' },
-    { mandi: 'Vadodara', price: '₹2,810', trend: 'up', change: '+0.9%' },
-    { mandi: 'Nadiad', price: '₹2,790', trend: 'flat', change: '0.0%' },
+    { mandi: currentLang === 'gu' ? 'અમદાવાદ' : currentLang === 'hi' ? 'अहमदाबाद' : 'Ahmedabad', price: '₹2,850', trend: 'up', change: '+2.4%' },
+    { mandi: currentLang === 'gu' ? 'સુરત' : currentLang === 'hi' ? 'सूरत' : 'Surat', price: '₹2,740', trend: 'down', change: '-1.8%' },
+    { mandi: currentLang === 'gu' ? 'વડોદરા' : currentLang === 'hi' ? 'वडोदरा' : 'Vadodara', price: '₹2,810', trend: 'up', change: '+0.9%' },
+    { mandi: currentLang === 'gu' ? 'નડિયાદ' : currentLang === 'hi' ? 'नडियाद' : 'Nadiad', price: '₹2,790', trend: 'flat', change: '0.0%' },
   ]
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -48,13 +50,7 @@ export function KrishiTopbar({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={
-                currentLang === 'gu'
-                  ? 'પૂછો અથવા લખો: દા.ત. આવતીકાલે આણંદમાં ૫૦૦ કિલો ટામેટા...'
-                  : currentLang === 'hi'
-                  ? 'पूछें या लिखें: जैसे कल आणंद में 500 किग्रा टमाटर...'
-                  : 'Ask or type: e.g. 500 kg tomatoes in Anand tomorrow...'
-              }
+              placeholder={t.searchPlaceholder}
               className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#f6f9f5] hover:bg-[#edf3ec] focus:bg-white text-[#193225] placeholder-[#7d8f84] border border-[#d6e2d4] focus:border-[#245e43] rounded-full outline-none transition-all shadow-xs"
             />
           </div>
@@ -63,25 +59,25 @@ export function KrishiTopbar({
           <div className="hidden xl:flex items-center gap-2 pl-3 border-l border-[#e2eae0] text-xs text-[#2b4235]">
             <span className="font-bold text-[10px] tracking-wider text-[#1d5c3f] uppercase flex items-center gap-1 bg-[#eaf4ec] px-2 py-0.5 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-[#1b7340] animate-pulse"></span>
-              {currentLang === 'gu' ? 'મંડી ભાવ' : currentLang === 'hi' ? 'मंडी भाव' : 'Mandi Ticker'}
+              {t.mandiTicker}
             </span>
 
             <div className="flex items-center gap-3">
-              {tickers.map((t) => (
-                <div key={t.mandi} className="flex items-center gap-1.5">
-                  <span className="text-[#55695d] font-medium">{t.mandi}</span>
-                  <span className="font-bold text-[#1a2f24]">{t.price}</span>
-                  {t.trend === 'up' && (
+              {tickers.map((item) => (
+                <div key={item.mandi} className="flex items-center gap-1.5">
+                  <span className="text-[#55695d] font-medium">{item.mandi}</span>
+                  <span className="font-bold text-[#1a2f24]">{item.price}</span>
+                  {item.trend === 'up' && (
                     <span className="text-[#137333] flex items-center text-[10px] font-semibold">
                       ▲
                     </span>
                   )}
-                  {t.trend === 'down' && (
+                  {item.trend === 'down' && (
                     <span className="text-[#c5221f] flex items-center text-[10px] font-semibold">
                       ▼
                     </span>
                   )}
-                  {t.trend === 'flat' && (
+                  {item.trend === 'flat' && (
                     <span className="text-[#80868b] flex items-center text-[10px]">
                       =
                     </span>
@@ -153,10 +149,10 @@ export function KrishiTopbar({
             </div>
             <div className="hidden sm:flex flex-col text-left">
               <span className="text-xs font-bold text-[#152e20] leading-tight">
-                R. Patel
+                {t.kisanProfile.split(' ')[0]} Patel
               </span>
               <span className="text-[10px] text-[#55695d] font-medium leading-tight">
-                Anand Lot #4
+                {currentLang === 'gu' ? 'આણંદ' : currentLang === 'hi' ? 'आणंद' : 'Anand'}
               </span>
             </div>
           </div>
