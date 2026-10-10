@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { FarmerShell } from '@/components/farmer/FarmerShell'
 import { getFarmerLotsApi, analyzeMarketApi, getOffersApi, getShipmentsApi } from '@/services/api/krishi-api'
 import { useAuth } from '@/context/auth-context'
+import { useLanguage } from '@/context/language-context'
 import {
   Sprout,
   Store,
@@ -13,13 +14,12 @@ import {
   Truck,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
-  Clock,
   ChevronRight,
 } from 'lucide-react'
 
 export default function FarmerDashboardPage() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [lots, setLots] = useState<any[]>([])
   const [analysis, setAnalysis] = useState<any>(null)
   const [offers, setOffers] = useState<any[]>([])
@@ -73,17 +73,22 @@ export default function FarmerDashboardPage() {
 
   return (
     <FarmerShell>
-      <div className="space-[#11-y] space-y-6">
+      <div className="space-y-6">
         {/* Welcome Greeting Banner */}
         <div className="bg-gradient-to-r from-emerald-900 to-emerald-800 rounded-2xl p-6 text-white shadow-lg border border-emerald-700">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <span className="text-amber-400 text-xs font-bold uppercase tracking-wider">Farmer Decision Dashboard</span>
+              <span className="text-amber-400 text-xs font-bold uppercase tracking-wider">
+                {t('Farmer Decision Dashboard', 'Farmer Decision Dashboard')}
+              </span>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
-                Good Morning, {user?.name || 'Ramesh Patel'}
+                {t('Good Morning', 'Good Morning')}, {user?.name || 'Ramesh Patel'}
               </h1>
               <p className="text-emerald-100 text-xs sm:text-sm mt-1">
-                Here is your harvest status and today's top market selling recommendations.
+                {t(
+                  'harvestStatusDesc',
+                  "Here is your harvest status and today's top market selling recommendations."
+                )}
               </p>
             </div>
             <Link
@@ -91,7 +96,7 @@ export default function FarmerDashboardPage() {
               className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow transition-all whitespace-nowrap"
             >
               <Sprout className="w-4 h-4" />
-              + Add New Harvest Lot
+              {t('+ Add New Harvest Lot', '+ Add New Harvest Lot')}
             </Link>
           </div>
         </div>
@@ -102,21 +107,21 @@ export default function FarmerDashboardPage() {
           <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
-                <span>WHAT DO I HAVE?</span>
+                <span>{t('WHAT DO I HAVE?', 'WHAT DO I HAVE?')}</span>
                 <Sprout className="w-4 h-4 text-emerald-600" />
               </div>
               <div className="text-xl font-bold text-stone-900">
-                {activeLot ? `${activeLot.crop?.name || 'Tomato'} Lot` : 'No Ready Produce'}
+                {activeLot ? `${t(activeLot.crop?.name || 'Tomato', activeLot.crop?.name || 'Tomato')} ${t('Lots', 'Lot')}` : t('No Ready Produce', 'No Ready Produce')}
               </div>
               <div className="text-xs text-stone-600 mt-1 font-medium">
-                {activeLot ? `${activeLot.quantityKg} kg • ${activeLot.grade}` : 'Register your first lot'}
+                {activeLot ? `${activeLot.quantityKg} kg • ${activeLot.grade}` : t('Register your first lot', 'Register your first lot')}
               </div>
             </div>
             <Link
               href="/farmer/produce"
               className="mt-4 text-xs font-bold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1"
             >
-              View My Produce Lots <ChevronRight className="w-3.5 h-3.5" />
+              {t('View My Produce Lots', 'View My Produce Lots')} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -124,21 +129,21 @@ export default function FarmerDashboardPage() {
           <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
-                <span>WHERE TO SELL?</span>
+                <span>{t('WHERE TO SELL?', 'WHERE TO SELL?')}</span>
                 <Store className="w-4 h-4 text-amber-500" />
               </div>
               <div className="text-xl font-bold text-stone-900 truncate">
                 {analysis?.bestMarket ? analysis.bestMarket.name : 'Ahmedabad APMC'}
               </div>
               <div className="text-xs text-emerald-700 font-bold mt-1">
-                Score: {analysis?.bestMarket ? `${analysis.bestMarket.score}/100` : '89/100'} • Recommended
+                Score: {analysis?.bestMarket ? `${analysis.bestMarket.score}/100` : '89/100'} • {t('Recommended', 'Recommended')}
               </div>
             </div>
             <Link
               href="/farmer/markets"
               className="mt-4 text-xs font-bold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1"
             >
-              Compare Mandi Realizations <ChevronRight className="w-3.5 h-3.5" />
+              {t('Compare Mandi Realizations', 'Compare Mandi Realizations')} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -146,21 +151,21 @@ export default function FarmerDashboardPage() {
           <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
-                <span>ESTIMATED NET IN-HAND</span>
+                <span>{t('ESTIMATED NET IN-HAND', 'ESTIMATED NET IN-HAND')}</span>
                 <TrendingUp className="w-4 h-4 text-emerald-600" />
               </div>
               <div className="text-2xl font-black text-emerald-800">
                 ₹{analysis?.bestMarket ? analysis.bestMarket.totalNet.toLocaleString('en-IN') : '13,850'}
               </div>
               <div className="text-[11px] text-stone-500 mt-1">
-                After transport & handling deductions
+                {t('After transport & handling deductions', 'After transport & handling deductions')}
               </div>
             </div>
             <Link
               href="/farmer/markets"
               className="mt-4 text-xs font-bold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1"
             >
-              View Calculation Breakdown <ChevronRight className="w-3.5 h-3.5" />
+              {t('View Calculation Breakdown', 'View Calculation Breakdown')} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -168,21 +173,21 @@ export default function FarmerDashboardPage() {
           <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-xs text-stone-500 font-semibold mb-2">
-                <span>BUYER OFFERS</span>
+                <span>{t('BUYER OFFERS', 'BUYER OFFERS')}</span>
                 <Tag className="w-4 h-4 text-blue-600" />
               </div>
               <div className="text-xl font-bold text-stone-900">
-                {offers.length} Active {offers.length === 1 ? 'Offer' : 'Offers'}
+                {offers.length} {t('Active Offers', 'Active Offers')}
               </div>
               <div className="text-xs text-stone-600 mt-1">
-                {offers[0] ? `Top offer: ₹${offers[0].offeredPrice}/kg` : 'Waiting for buyer offers'}
+                {offers[0] ? `Top offer: ₹${offers[0].offeredPrice}/kg` : t('Waiting for buyer offers', 'Waiting for buyer offers')}
               </div>
             </div>
             <Link
               href="/farmer/offers"
               className="mt-4 text-xs font-bold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1"
             >
-              Review Buyer Offers <ChevronRight className="w-3.5 h-3.5" />
+              {t('Review Buyer Offers', 'Review Buyer Offers')} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
@@ -195,7 +200,7 @@ export default function FarmerDashboardPage() {
               Opportunity Recommendation Engine
             </div>
             <h2 className="text-xl font-extrabold text-stone-900">
-              Selling your {activeLot?.crop?.name || 'Tomato'} lot today in {analysis.bestMarket.name} is recommended.
+              Selling your {t(activeLot?.crop?.name || 'Tomato', activeLot?.crop?.name || 'Tomato')} lot today in {analysis.bestMarket.name} is recommended.
             </h2>
             <p className="text-stone-700 text-sm mt-1 max-w-3xl">
               {analysis.sellVsWait.reasoning}
@@ -231,7 +236,7 @@ export default function FarmerDashboardPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-stone-900 text-sm">Shipment in Transit</span>
+                  <span className="font-bold text-stone-900 text-sm">{t('FLEET IN TRANSIT', 'Shipment in Transit')}</span>
                   <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">LIVE</span>
                 </div>
                 <div className="text-xs text-stone-600 mt-0.5">
