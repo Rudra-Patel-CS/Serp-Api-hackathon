@@ -25,6 +25,13 @@ export const getEvidenceApi = (cropName?: string, location?: string) => {
   const query = cropName ? `?cropName=${encodeURIComponent(cropName)}&location=${encodeURIComponent(location || 'Anand')}` : ''
   return apiFetch(`/api/market-intelligence/evidence${query}`)
 }
+export const discoverBuyersApi = (queryType?: string, cropName?: string, location?: string) => {
+  const queryParams = new URLSearchParams()
+  if (queryType) queryParams.append('queryType', queryType)
+  if (cropName) queryParams.append('cropName', cropName)
+  if (location) queryParams.append('location', location)
+  return apiFetch(`/api/market-intelligence/discover-buyers?${queryParams.toString()}`)
+}
 
 // Buyer API
 export const getBuyersApi = (buyerType?: string) => {

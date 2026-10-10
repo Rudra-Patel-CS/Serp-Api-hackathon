@@ -1,9 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { useLanguage } from '@/context/language-context'
+import { LanguageSelector } from '@/components/LanguageSelector'
 import {
   LayoutDashboard,
   Sprout,
@@ -14,34 +16,31 @@ import {
   Bell,
   User,
   LogOut,
-  Globe,
-  Menu,
-  X,
 } from 'lucide-react'
 
 export function FarmerShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const { user, logout } = useAuth()
-  const [lang, setLang] = useState<'en' | 'gu' | 'hi'>('en')
+  const { t } = useLanguage()
 
   const navItems = [
-    { label: 'Home', href: '/farmer/dashboard', icon: LayoutDashboard },
-    { label: 'My Produce', href: '/farmer/produce', icon: Sprout },
-    { label: 'Markets', href: '/farmer/markets', icon: Store },
-    { label: 'Find Buyers', href: '/farmer/buyers', icon: Users },
-    { label: 'Offers', href: '/farmer/offers', icon: Tag },
-    { label: 'Logistics', href: '/farmer/logistics', icon: Truck },
-    { label: 'Alerts', href: '/farmer/alerts', icon: Bell },
-    { label: 'Profile', href: '/farmer/profile', icon: User },
+    { label: t('Home', 'Home'), href: '/farmer/dashboard', icon: LayoutDashboard },
+    { label: t('My Produce', 'My Produce'), href: '/farmer/produce', icon: Sprout },
+    { label: t('Markets', 'Markets'), href: '/farmer/markets', icon: Store },
+    { label: t('Find Buyers', 'Find Buyers'), href: '/farmer/buyers', icon: Users },
+    { label: t('Offers', 'Offers'), href: '/farmer/offers', icon: Tag },
+    { label: t('Logistics', 'Logistics'), href: '/farmer/logistics', icon: Truck },
+    { label: t('Alerts', 'Alerts'), href: '/farmer/alerts', icon: Bell },
+    { label: t('Profile', 'Profile'), href: '/farmer/profile', icon: User },
   ]
 
   const bottomNavItems = [
-    { label: 'Home', href: '/farmer/dashboard', icon: LayoutDashboard },
-    { label: 'Produce', href: '/farmer/produce', icon: Sprout },
-    { label: 'Markets', href: '/farmer/markets', icon: Store },
-    { label: 'Offers', href: '/farmer/offers', icon: Tag },
-    { label: 'Profile', href: '/farmer/profile', icon: User },
+    { label: t('Home', 'Home'), href: '/farmer/dashboard', icon: LayoutDashboard },
+    { label: t('My Produce', 'My Produce'), href: '/farmer/produce', icon: Sprout },
+    { label: t('Markets', 'Markets'), href: '/farmer/markets', icon: Store },
+    { label: t('Offers', 'Offers'), href: '/farmer/offers', icon: Tag },
+    { label: t('Profile', 'Profile'), href: '/farmer/profile', icon: User },
   ]
 
   return (
@@ -50,13 +49,13 @@ export function FarmerShell({ children }: { children: React.ReactNode }) {
       <header className="bg-emerald-900 text-white sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-500 text-stone-950 font-extrabold flex items-center justify-center text-lg">
+            <div className="w-9 h-9 rounded-lg bg-amber-500 text-stone-950 font-extrabold flex items-center justify-center text-lg shadow-md">
               K
             </div>
             <div>
               <span className="font-bold text-white text-lg tracking-tight">KrishiIntel</span>
               <span className="hidden sm:inline-block ml-2 text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded font-medium">
-                Farmer Workspace
+                {t('Farmer Workspace', 'Farmer Workspace')}
               </span>
             </div>
           </div>
@@ -81,27 +80,8 @@ export function FarmerShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-3">
-            {/* Language Switcher */}
-            <div className="flex items-center bg-emerald-950 rounded-lg p-1 text-xs font-semibold text-emerald-200">
-              <button
-                onClick={() => setLang('en')}
-                className={`px-2 py-1 rounded ${lang === 'en' ? 'bg-emerald-700 text-white' : 'hover:text-white'}`}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => setLang('gu')}
-                className={`px-2 py-1 rounded ${lang === 'gu' ? 'bg-emerald-700 text-white' : 'hover:text-white'}`}
-              >
-                ગુજ
-              </button>
-              <button
-                onClick={() => setLang('hi')}
-                className={`px-2 py-1 rounded ${lang === 'hi' ? 'bg-emerald-700 text-white' : 'hover:text-white'}`}
-              >
-                हिं
-              </button>
-            </div>
+            {/* Global Language Selector */}
+            <LanguageSelector />
 
             {/* Profile User Info & Logout */}
             <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-emerald-800 text-xs">
@@ -110,13 +90,13 @@ export function FarmerShell({ children }: { children: React.ReactNode }) {
               </div>
               <div className="text-left leading-tight">
                 <div className="font-bold text-white">{user?.name || 'Ramesh Patel'}</div>
-                <div className="text-emerald-300">Farmer • Anand</div>
+                <div className="text-emerald-300">{t('Farmer', 'Farmer')} • Anand</div>
               </div>
             </div>
 
             <button
               onClick={() => logout()}
-              title="Logout"
+              title={t('Logout', 'Logout')}
               className="p-2 text-emerald-200 hover:text-rose-300 transition-colors"
             >
               <LogOut className="w-5 h-5" />

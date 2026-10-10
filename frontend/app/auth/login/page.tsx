@@ -4,14 +4,19 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth, PlatformRole } from '@/context/auth-context'
+import { useLanguage } from '@/context/language-context'
+import { LanguageSelector } from '@/components/LanguageSelector'
 import { loginApi } from '@/services/api/auth-api'
 import { toast } from 'sonner'
 import { Lock, Phone, UserCheck, ArrowLeft, Loader2, Sparkles, AlertCircle } from 'lucide-react'
+
+export const dynamic = 'force-dynamic'
 
 function LoginFormContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { selectedRole, setSelectedRole, setUserSession } = useAuth()
+  const { t } = useLanguage()
 
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
@@ -32,7 +37,7 @@ function LoginFormContent() {
     setErrorMsg(null)
 
     if (!identifier || !password) {
-      toast.error('Please enter your mobile number/email and password')
+      toast.error(t('Please enter your mobile number/email and password', 'Please enter your mobile number/email and password'))
       return
     }
 
@@ -84,33 +89,35 @@ function LoginFormContent() {
   }
 
   return (
-    <div className="bg-stone-800/90 border border-stone-700 rounded-2xl p-6 sm:p-8 shadow-2xl">
-      <div className="flex items-center justify-between bg-stone-900/80 p-3 rounded-xl border border-stone-700 mb-6">
+    <div className="bg-white border border-emerald-100 rounded-2xl p-6 sm:p-8 shadow-xl">
+      <div className="flex items-center justify-between bg-emerald-50 p-3 rounded-xl border border-emerald-200 mb-6">
         <div className="flex items-center gap-2">
-          <UserCheck className="w-5 h-5 text-amber-400" />
-          <span className="text-xs text-stone-400 font-medium">Selected Role:</span>
+          <UserCheck className="w-5 h-5 text-emerald-700" />
+          <span className="text-xs text-stone-600 font-medium">{t('Selected Role:', 'Selected Role:')}</span>
         </div>
-        <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold px-3 py-1 rounded-full uppercase">
+        <span className="bg-amber-500 text-stone-950 text-xs font-bold px-3 py-1 rounded-full uppercase shadow-sm">
           {activeRole.replace('_', ' ')}
         </span>
       </div>
 
-      <h1 className="text-2xl font-bold text-white text-center mb-1">Account Authentication</h1>
-      <p className="text-stone-400 text-xs text-center mb-6">
-        Sign in to access your role-specific agricultural workspace.
+      <h1 className="text-2xl font-bold text-stone-900 text-center mb-1">
+        {t('Account Authentication', 'Account Authentication')}
+      </h1>
+      <p className="text-stone-600 text-xs text-center mb-6">
+        {t('Sign in to access your role-specific agricultural workspace.', 'Sign in to access your role-specific agricultural workspace.')}
       </p>
 
       {errorMsg && (
-        <div className="mb-5 bg-rose-900/40 border border-rose-700/60 text-rose-200 text-xs p-3.5 rounded-xl flex items-start gap-2.5">
-          <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+        <div className="mb-5 bg-rose-50 border border-rose-200 text-rose-800 text-xs p-3.5 rounded-xl flex items-start gap-2.5">
+          <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
           <div>{errorMsg}</div>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-stone-300 mb-1.5">
-            Mobile Number / Email Address
+          <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+            {t('Mobile Number / Email Address', 'Mobile Number / Email Address')}
           </label>
           <input
             type="text"
@@ -118,14 +125,16 @@ function LoginFormContent() {
             onChange={(e) => setIdentifier(e.target.value)}
             placeholder="e.g. 9876543210 or farmer@demo.krishiintel.local"
             required
-            className="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+            className="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-semibold text-stone-300">Password</label>
-            <Link href="/auth/forgot-password" className="text-xs text-amber-400 hover:underline">
+            <label className="block text-xs font-semibold text-stone-700">
+              {t('Password', 'Password')}
+            </label>
+            <Link href="/auth/forgot-password" className="text-xs text-emerald-700 hover:underline">
               Forgot Password?
             </Link>
           </div>
@@ -135,57 +144,57 @@ function LoginFormContent() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             required
-            className="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+            className="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-3 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
           />
         </div>
 
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+          className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin text-stone-950" />
               Verifying Credentials...
             </>
           ) : (
-            `Login as ${activeRole.replace('_', ' ')}`
+            `${t('signIn', 'Login as')} ${activeRole.replace('_', ' ')}`
           )}
         </button>
       </form>
 
-      <div className="mt-6 pt-5 border-t border-stone-700/60 text-center text-xs text-stone-400">
-        Don't have an account yet?{' '}
-        <Link href="/auth/register" className="text-amber-400 font-bold hover:underline">
-          Create Account
+      <div className="mt-6 pt-5 border-t border-stone-200 text-center text-xs text-stone-600">
+        {t("Don't have an account yet? Create Account", "Don't have an account yet?")}{' '}
+        <Link href="/auth/register" className="text-emerald-700 font-bold hover:underline">
+          {t('createAccount', 'Create Account')}
         </Link>
       </div>
 
-      <div className="mt-6 bg-stone-900/90 p-4 rounded-xl border border-stone-700/80">
-        <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 mb-2">
-          <Sparkles className="w-4 h-4" />
+      <div className="mt-6 bg-emerald-50/70 p-4 rounded-xl border border-emerald-200">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 mb-2">
+          <Sparkles className="w-4 h-4 text-amber-600" />
           <span>Quick Development Demo Autofill</span>
         </div>
         <div className="grid grid-cols-3 gap-2 text-xs">
           <button
             type="button"
             onClick={() => fillDemoAccount('FARMER')}
-            className="bg-stone-800 hover:bg-stone-700 text-stone-200 py-2 px-2 rounded border border-stone-700 text-center font-medium"
+            className="bg-white hover:bg-emerald-100 text-stone-800 py-2 px-2 rounded-lg border border-emerald-200 text-center font-medium shadow-xs"
           >
-            Farmer
+            {t('Farmer', 'Farmer')}
           </button>
           <button
             type="button"
             onClick={() => fillDemoAccount('FPO_MANAGER')}
-            className="bg-stone-800 hover:bg-stone-700 text-stone-200 py-2 px-2 rounded border border-stone-700 text-center font-medium"
+            className="bg-white hover:bg-emerald-100 text-stone-800 py-2 px-2 rounded-lg border border-emerald-200 text-center font-medium shadow-xs"
           >
             FPO Mgr
           </button>
           <button
             type="button"
             onClick={() => fillDemoAccount('ADMIN')}
-            className="bg-stone-800 hover:bg-stone-700 text-stone-200 py-2 px-2 rounded border border-stone-700 text-center font-medium"
+            className="bg-white hover:bg-emerald-100 text-stone-800 py-2 px-2 rounded-lg border border-emerald-200 text-center font-medium shadow-xs"
           >
             Admin
           </button>
@@ -196,23 +205,28 @@ function LoginFormContent() {
 }
 
 export default function LoginPage() {
+  const { t } = useLanguage()
+
   return (
-    <div className="min-h-screen bg-stone-900 text-stone-100 flex flex-col justify-between p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-stone-100 text-stone-900 flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-        <Link href="/auth/role" className="inline-flex items-center gap-2 text-stone-400 hover:text-white text-sm font-medium transition-colors">
+        <Link href="/auth/role" className="inline-flex items-center gap-2 text-stone-600 hover:text-emerald-800 text-sm font-medium transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Change Role Selection
+          {t('Change Role Selection', 'Change Role Selection')}
         </Link>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
-            K
+        <div className="flex items-center gap-3">
+          <LanguageSelector />
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-emerald-800 flex items-center justify-center font-extrabold text-amber-400 text-sm">
+              K
+            </div>
+            <span className="font-bold text-stone-900 text-lg">KrishiIntel</span>
           </div>
-          <span className="font-bold text-white text-lg">KrishiIntel</span>
         </div>
       </div>
 
       <div className="max-w-md mx-auto w-full py-8">
-        <Suspense fallback={<div className="text-center py-12 text-stone-400"><Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />Loading Login...</div>}>
+        <Suspense fallback={<div className="text-center py-12 text-stone-500"><Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-emerald-600" />Loading Login...</div>}>
           <LoginFormContent />
         </Suspense>
       </div>

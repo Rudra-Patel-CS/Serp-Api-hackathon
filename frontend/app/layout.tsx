@@ -12,17 +12,21 @@ export const metadata: Metadata = {
     'Know where, when, and to whom to sell your harvest. Compare markets, calculate net realization, find buyers, and track logistics across Gujarat.',
 }
 
+import { LanguageProvider } from '@/context/language-context'
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full bg-stone-50">
+    <html lang="gu" className="h-full bg-stone-50">
       <body className={`${inter.className} h-full antialiased text-stone-900 bg-stone-50`}>
         <AuthProvider>
-          {children}
-          <Toaster position="top-right" richColors />
+          <LanguageProvider>
+            {children}
+            <Toaster position="top-right" richColors />
+          </LanguageProvider>
         </AuthProvider>
       </body>
     </html>

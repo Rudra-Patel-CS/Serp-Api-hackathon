@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { FarmerShell } from '@/components/farmer/FarmerShell'
 import { analyzeMarketApi } from '@/services/api/krishi-api'
+import { useLanguage } from '@/context/language-context'
 import { toast } from 'sonner'
 import {
   Store,
@@ -15,6 +16,8 @@ import {
   Share2,
   HelpCircle,
   ExternalLink,
+  CheckCircle2,
+  Globe,
 } from 'lucide-react'
 
 export default function FarmerMarketsPage() {
@@ -24,6 +27,7 @@ export default function FarmerMarketsPage() {
   const [isFpoPool, setIsFpoPool] = useState(false)
   const [analysis, setAnalysis] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useLanguage()
 
   // Kisan Bahi Voucher Modal state
   const [showBahiModal, setShowBahiModal] = useState(false)
@@ -83,12 +87,20 @@ export default function FarmerMarketsPage() {
           <div>
             <h1 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
               <Store className="w-6 h-6 text-amber-500" />
-              Market Intelligence & Mandi Comparison
+              {t('Market Intelligence & Mandi Comparison', 'Market Intelligence & Mandi Comparison')}
             </h1>
             <p className="text-stone-600 text-xs mt-1">
               Compare APMC market rates after accounting for distance, transport freight, mandi cess, and moisture shrinkage.
             </p>
           </div>
+
+          {/* Data Status Badge */}
+          {analysis?.dataStatus && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-extrabold border shadow-xs bg-emerald-50 border-emerald-300 text-emerald-900">
+              <Globe className="w-4 h-4 text-emerald-700 animate-pulse" />
+              <span>{analysis.dataStatus.badge || 'LIVE WEB EVIDENCE'}</span>
+            </div>
+          )}
         </div>
 
         {/* Input Parameters Form */}
@@ -100,7 +112,7 @@ export default function FarmerMarketsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
             <div>
-              <label className="block text-emerald-200 font-semibold mb-1">Crop Type</label>
+              <label className="block text-emerald-200 font-semibold mb-1">{t('Crop', 'Crop Type')}</label>
               <select
                 value={cropName}
                 onChange={(e) => setCropName(e.target.value)}
@@ -116,7 +128,7 @@ export default function FarmerMarketsPage() {
             </div>
 
             <div>
-              <label className="block text-emerald-200 font-semibold mb-1">Quantity (in kg)</label>
+              <label className="block text-emerald-200 font-semibold mb-1">{t('Quantity', 'Quantity (in kg)')}</label>
               <input
                 type="number"
                 value={quantityKg}
@@ -126,7 +138,7 @@ export default function FarmerMarketsPage() {
             </div>
 
             <div>
-              <label className="block text-emerald-200 font-semibold mb-1">Origin Location</label>
+              <label className="block text-emerald-200 font-semibold mb-1">{t('Location', 'Origin Location')}</label>
               <input
                 type="text"
                 value={location}
@@ -141,7 +153,7 @@ export default function FarmerMarketsPage() {
                 disabled={isLoading}
                 className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-2.5 px-4 rounded-lg shadow transition-all flex items-center justify-center gap-2"
               >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Run Market Analysis'}
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-stone-950" /> : t('Analyze market', 'Run Market Analysis')}
               </button>
             </div>
           </div>
@@ -187,7 +199,10 @@ export default function FarmerMarketsPage() {
                           )}
                         </td>
                         <td className="p-3.5">{mandi.distanceKm} km</td>
-                        <td className="p-3.5 font-bold text-stone-900">₹{mandi.grossPerQtl}</td>
+                        <td className="p-3.5 font-bold text-stone-900">
+                          ₹{mandi.grossPerQtl}
+                          <span className="block text-[10px] text-emerald-700 font-normal">OFFICIAL MARKET DATA</span>
+                        </td>
                         <td className="p-3.5 text-rose-700">-₹{mandi.totalFreight}</td>
                         <td className="p-3.5 text-rose-700">-₹{mandi.totalCess + mandi.totalHandling}</td>
                         <td className="p-3.5">
@@ -202,7 +217,7 @@ export default function FarmerMarketsPage() {
                         <td className="p-3.5 text-right">
                           <button
                             onClick={() => handleOpenBahi(mandi)}
-                            className="bg-emerald-800 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1"
+                            className="bg-emerald-800 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow-xs"
                           >
                             <FileText className="w-3.5 h-3.5" />
                             Kisan Bahi Slip
@@ -278,31 +293,43 @@ export default function FarmerMarketsPage() {
               </div>
             )}
 
-            {/* Supporting Evidence Records */}
+            {/* Supporting Evidence Records with Status Badges */}
             {analysis.evidence && (
               <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
-                <h3 className="text-base font-bold text-stone-900">
-                  Supporting Market Evidence & Verified Sources
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-emerald-700" />
+                    Supporting Web Market Evidence & News Signals
+                  </h3>
+                  <span className="text-xs bg-emerald-100 text-emerald-900 font-bold px-3 py-1 rounded-full border border-emerald-300">
+                    {analysis.dataStatus?.badge || 'LIVE WEB EVIDENCE'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {analysis.evidence.map((ev: any) => (
                     <div key={ev.id} className="bg-stone-50 p-4 rounded-xl border border-stone-200 text-xs flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-between text-stone-500 text-[10px] mb-1">
-                          <span>{ev.source}</span>
+                          <span className="font-bold text-emerald-800">{ev.sourceName || ev.source}</span>
                           <span>{ev.observedAt}</span>
                         </div>
                         <h4 className="font-bold text-stone-900 mb-1 leading-snug">{ev.title}</h4>
                         <p className="text-stone-600 text-[11px] line-clamp-3">{ev.snippet}</p>
                       </div>
-                      <a
-                        href={ev.sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-3 text-emerald-700 font-bold hover:underline flex items-center gap-1 text-[11px]"
-                      >
-                        Verify Source <ExternalLink className="w-3 h-3" />
-                      </a>
+                      <div className="mt-3 pt-2 border-t border-stone-200 flex items-center justify-between">
+                        <span className="text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">
+                          {ev.sourceType === 'google_news' ? 'GOOGLE NEWS' : ev.sourceType === 'google_search' ? 'GOOGLE SEARCH' : 'DEMO SIGNAL'}
+                        </span>
+                        <a
+                          href={ev.sourceUrl || '#'}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-emerald-700 font-bold hover:underline flex items-center gap-1 text-[11px]"
+                        >
+                          Verify Source <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
                     </div>
                   ))}
                 </div>
