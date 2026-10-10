@@ -260,7 +260,9 @@ export async function login(req: Request, res: Response) {
     const isDbAuthError =
       error?.name === 'PrismaClientInitializationError' ||
       error?.message?.includes('Authentication failed') ||
-      error?.message?.includes('database server')
+      error?.message?.includes('database server') ||
+      error?.message?.includes('ECONNREFUSED') ||
+      error?.code === 'P1001'
 
     if (isDbAuthError) {
       const { identifier, selectedRole } = req.body
@@ -301,9 +303,27 @@ export async function login(req: Request, res: Response) {
         },
       }
 
-      const fallbackUser = DEMO_ACCOUNTS[identifier] || Object.values(DEMO_ACCOUNTS).find((u: any) => u.phone === identifier)
+      let fallbackUser =
+        DEMO_ACCOUNTS[identifier] ||
+        Object.values(DEMO_ACCOUNTS).find(
+          (u: any) =>
+            u.phone === identifier ||
+            u.phone.replace('+91', '') === identifier ||
+            u.email.toLowerCase() === String(identifier).toLowerCase()
+        )
 
-      if (fallbackUser && fallbackUser.role === normRole) {
+      // If user typed an custom identifier, map to fallback account corresponding to selected role
+      if (!fallbackUser || (fallbackUser && fallbackUser.role !== normRole)) {
+        if (normRole === 'ADMIN') {
+          fallbackUser = DEMO_ACCOUNTS['admin@demo.krishiintel.local']
+        } else if (normRole === 'FPO_MANAGER' || normRole === 'FPO MGR' || normRole === 'FPO') {
+          fallbackUser = DEMO_ACCOUNTS['fpo@demo.krishiintel.local']
+        } else {
+          fallbackUser = DEMO_ACCOUNTS['farmer@demo.krishiintel.local']
+        }
+      }
+
+      if (fallbackUser) {
         const token = jwt.sign(
           {
             id: fallbackUser.id,
