@@ -6,14 +6,23 @@ import { getFarmerLotsApi, createLotApi, getMarketsApi } from '@/services/api/kr
 import { toast } from 'sonner'
 import { Sprout, Plus, CheckCircle2, Clock, MapPin, Scale, Loader2 } from 'lucide-react'
 
+const DEFAULT_CROPS = [
+  { id: 'CROP-TOMATO-01', name: 'Tomato', localName: 'Tameta / ટામેટા' },
+  { id: 'CROP-ONION-02', name: 'Red Onion', localName: 'Dungri / ડુંગળી' },
+  { id: 'CROP-POTATO-03', name: 'Potato', localName: 'Bataka / બટાકા' },
+  { id: 'CROP-COTTON-04', name: 'Cotton', localName: 'Kapas / કપાસ' },
+  { id: 'CROP-GROUNDNUT-05', name: 'Groundnut', localName: 'Magfali / મગફળી' },
+  { id: 'CROP-WHEAT-06', name: 'Wheat', localName: 'Gahu / ઘઉં' },
+]
+
 export default function FarmerProducePage() {
   const [lots, setLots] = useState<any[]>([])
-  const [crops, setCrops] = useState<any[]>([])
+  const [crops, setCrops] = useState<any[]>(DEFAULT_CROPS)
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   // New Lot Form State
-  const [cropId, setCropId] = useState('')
+  const [cropId, setCropId] = useState(DEFAULT_CROPS[0].id)
   const [quantityKg, setQuantityKg] = useState('500')
   const [grade, setGrade] = useState('Grade A')
   const [moisture, setMoisture] = useState('14%')
@@ -26,11 +35,9 @@ export default function FarmerProducePage() {
       try {
         const [lotsRes, marketsRes] = await Promise.all([getFarmerLotsApi(), getMarketsApi()])
         if (lotsRes.success && lotsRes.data) setLots(lotsRes.data)
-        if (marketsRes.success && marketsRes.data?.crops) {
+        if (marketsRes.success && marketsRes.data?.crops && marketsRes.data.crops.length > 0) {
           setCrops(marketsRes.data.crops)
-          if (marketsRes.data.crops.length > 0) {
-            setCropId(marketsRes.data.crops[0].id)
-          }
+          setCropId(marketsRes.data.crops[0].id)
         }
       } catch (err) {
         console.error('Error loading lots', err)
@@ -177,11 +184,11 @@ export default function FarmerProducePage() {
                   <select
                     value={cropId}
                     onChange={(e) => setCropId(e.target.value)}
-                    className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 focus:ring-1 focus:ring-amber-500"
+                    className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 bg-white font-medium focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-sm"
                   >
                     {crops.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({c.localName})
+                      <option key={c.id} value={c.id} className="text-stone-900 bg-white py-1">
+                        {c.name} {c.localName ? `(${c.localName})` : ''}
                       </option>
                     ))}
                   </select>
@@ -195,7 +202,7 @@ export default function FarmerProducePage() {
                       value={quantityKg}
                       onChange={(e) => setQuantityKg(e.target.value)}
                       required
-                      className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 focus:ring-1 focus:ring-amber-500"
+                      className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 bg-white font-medium focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-sm"
                     />
                   </div>
                   <div>
@@ -203,11 +210,11 @@ export default function FarmerProducePage() {
                     <select
                       value={grade}
                       onChange={(e) => setGrade(e.target.value)}
-                      className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 focus:ring-1 focus:ring-amber-500"
+                      className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 bg-white font-medium focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-sm"
                     >
-                      <option value="Grade A">Grade A (Premium)</option>
-                      <option value="Grade B">Grade B (Standard)</option>
-                      <option value="Grade C">Grade C (Commercial)</option>
+                      <option value="Grade A" className="text-stone-900 bg-white py-1">Grade A (Premium)</option>
+                      <option value="Grade B" className="text-stone-900 bg-white py-1">Grade B (Standard)</option>
+                      <option value="Grade C" className="text-stone-900 bg-white py-1">Grade C (Commercial)</option>
                     </select>
                   </div>
                 </div>
