@@ -4,13 +4,16 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { registerApi } from '@/services/api/auth-api'
-import { useAuth, PlatformRole } from '@/context/auth-context'
+import { useAuth } from '@/context/auth-context'
+import { useLanguage } from '@/context/language-context'
+import { LanguageSelector } from '@/components/LanguageSelector'
 import { toast } from 'sonner'
-import { Tractor, Users, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react'
+import { Tractor, Users, ArrowLeft, Loader2, Sprout, Building2 } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
   const { setUserSession } = useAuth()
+  const { t } = useLanguage()
   const [roleTab, setRoleTab] = useState<'FARMER' | 'FPO_MANAGER'>('FARMER')
 
   // Form Fields
@@ -35,12 +38,12 @@ export default function RegisterPage() {
     e.preventDefault()
 
     if (!name || !mobile || !password) {
-      toast.error('Name, mobile number, and password are required')
+      toast.error(t('Name, mobile number, and password are required', 'Name, mobile number, and password are required'))
       return
     }
 
     if (roleTab === 'FPO_MANAGER' && (!fpoName || !fpoRegNum)) {
-      toast.error('FPO Name and Registration Number are required for FPO Managers')
+      toast.error(t('FPO Name and Registration Number are required for FPO Managers', 'FPO Name and Registration Number are required for FPO Managers'))
       return
     }
 
@@ -64,7 +67,7 @@ export default function RegisterPage() {
       })
 
       if (res.success && res.data) {
-        toast.success('Registration successful! Welcome to KrishiIntel.')
+        toast.success(t('Registration successful! Welcome to KrishiIntel.', 'Registration successful! Welcome to KrishiIntel.'))
         setUserSession(res.data.user, res.data.token)
 
         if (roleTab === 'FARMER') {
@@ -73,115 +76,134 @@ export default function RegisterPage() {
           router.push('/fpo/dashboard')
         }
       } else {
-        toast.error(res.error?.message || 'Registration failed')
+        toast.error(res.error?.message || t('Registration failed', 'Registration failed'))
       }
     } catch (err: any) {
-      toast.error('Registration failed due to connection error')
+      toast.error(t('Registration failed due to connection error', 'Registration failed due to connection error'))
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-stone-900 text-stone-100 flex flex-col justify-between p-4 sm:p-6 lg:p-8">
-      {/* Header */}
+    <div className="min-h-screen bg-stone-100 text-stone-900 flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans">
+      {/* Header Bar matching Login/Role Screens */}
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-        <Link href="/auth/login" className="inline-flex items-center gap-2 text-stone-400 hover:text-white text-sm font-medium transition-colors">
+        <Link
+          href="/auth/login"
+          className="inline-flex items-center gap-2 text-stone-600 hover:text-emerald-800 text-sm font-medium transition-colors"
+        >
           <ArrowLeft className="w-4 h-4" />
-          Back to Login
+          {t('Back to Login', 'Back to Login')}
         </Link>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
-            K
+        <div className="flex items-center gap-3">
+          <LanguageSelector />
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-emerald-800 flex items-center justify-center font-extrabold text-amber-400 text-sm shadow-sm">
+              K
+            </div>
+            <span className="font-bold text-stone-900 text-lg">KrishiIntel</span>
           </div>
-          <span className="font-bold text-white text-lg">KrishiIntel</span>
         </div>
       </div>
 
-      {/* Register Box */}
+      {/* Main Form Container matching Login Screen */}
       <div className="max-w-lg mx-auto w-full py-6">
-        <div className="bg-stone-800/90 border border-stone-700 rounded-2xl p-6 sm:p-8 shadow-2xl">
-          <h1 className="text-2xl font-bold text-white text-center mb-1">Create KrishiIntel Account</h1>
-          <p className="text-stone-400 text-xs text-center mb-6">
-            Register as a Farmer or FPO Manager to access real-time market intelligence.
+        <div className="bg-white border border-emerald-100 rounded-2xl p-6 sm:p-8 shadow-xl">
+          <h1 className="text-2xl font-bold text-stone-900 text-center mb-1">
+            {t('Create KrishiIntel Account', 'Create KrishiIntel Account')}
+          </h1>
+          <p className="text-stone-600 text-xs text-center mb-6">
+            {t(
+              'Register as a Farmer or FPO Manager to access real-time market intelligence.',
+              'Register as a Farmer or FPO Manager to access real-time market intelligence.'
+            )}
           </p>
 
-          {/* Role Toggle Tabs */}
-          <div className="grid grid-cols-2 gap-2 bg-stone-900 p-1.5 rounded-xl border border-stone-700 mb-6">
+          {/* Role Selection Toggle Tabs */}
+          <div className="grid grid-cols-2 gap-2 bg-emerald-50 p-1.5 rounded-xl border border-emerald-200 mb-6">
             <button
               type="button"
               onClick={() => setRoleTab('FARMER')}
               className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                 roleTab === 'FARMER'
-                  ? 'bg-amber-500 text-stone-950 shadow-md'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-amber-500 text-stone-950 shadow-sm'
+                  : 'text-stone-600 hover:text-emerald-800 hover:bg-emerald-100/50'
               }`}
             >
               <Tractor className="w-4 h-4" />
-              Farmer Registration
+              {t('Farmer Registration', 'Farmer Registration')}
             </button>
             <button
               type="button"
               onClick={() => setRoleTab('FPO_MANAGER')}
               className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                 roleTab === 'FPO_MANAGER'
-                  ? 'bg-emerald-600 text-white shadow-md'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-emerald-800 text-white shadow-sm'
+                  : 'text-stone-600 hover:text-emerald-800 hover:bg-emerald-100/50'
               }`}
             >
-              <Users className="w-4 h-4" />
-              FPO Manager Registration
+              <Building2 className="w-4 h-4" />
+              {t('FPO Manager Registration', 'FPO Manager Registration')}
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-stone-300 mb-1">Full Name *</label>
+                <label className="block font-semibold text-stone-700 mb-1">
+                  {t('Full Name', 'Full Name')} *
+                </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ramesh Patel"
                   required
-                  className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-300 mb-1">Mobile Number *</label>
+                <label className="block font-semibold text-stone-700 mb-1">
+                  {t('Mobile Number', 'Mobile Number')} *
+                </label>
                 <input
                   type="tel"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   placeholder="9876543210"
                   required
-                  className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-stone-300 mb-1">Email Address</label>
+                <label className="block font-semibold text-stone-700 mb-1">
+                  {t('Email Address', 'Email Address')}
+                </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ramesh@example.com"
-                  className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-300 mb-1">Password *</label>
+                <label className="block font-semibold text-stone-700 mb-1">
+                  {t('Password', 'Password')} *
+                </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                 />
               </div>
             </div>
@@ -191,58 +213,68 @@ export default function RegisterPage() {
               <>
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">Village</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('Village', 'Village')}
+                    </label>
                     <input
                       type="text"
                       value={village}
                       onChange={(e) => setVillage(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">District</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('District', 'District')}
+                    </label>
                     <input
                       type="text"
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">State</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('State', 'State')}
+                    </label>
                     <input
                       type="text"
                       value={state}
                       onChange={(e) => setState(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">Primary Crop</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('Primary Crop', 'Primary Crop')}
+                    </label>
                     <select
                       value={primaryCrop}
                       onChange={(e) => setPrimaryCrop(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     >
-                      <option value="Tomato">Tomato</option>
-                      <option value="Onion">Red Onion</option>
-                      <option value="Potato">Potato</option>
-                      <option value="Wheat">Wheat</option>
-                      <option value="Cotton">Cotton</option>
-                      <option value="Groundnut">Groundnut</option>
+                      <option value="Tomato">{t('Tomato', 'Tomato')}</option>
+                      <option value="Onion">{t('Onion', 'Red Onion')}</option>
+                      <option value="Potato">{t('Potato', 'Potato')}</option>
+                      <option value="Wheat">{t('Wheat', 'Wheat')}</option>
+                      <option value="Cotton">{t('Cotton', 'Cotton')}</option>
+                      <option value="Groundnut">{t('Groundnut', 'Groundnut')}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">Land Area (Acres)</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('Land Area (Acres)', 'Land Area (Acres)')}
+                    </label>
                     <input
                       type="number"
                       step="0.1"
                       value={landArea}
                       onChange={(e) => setLandArea(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     />
                   </div>
                 </div>
@@ -251,48 +283,56 @@ export default function RegisterPage() {
               /* FPO Manager Specific Fields */
               <>
                 <div>
-                  <label className="block font-semibold text-stone-300 mb-1">FPO Organization Name *</label>
+                  <label className="block font-semibold text-stone-700 mb-1">
+                    {t('FPO Name', 'FPO Organization Name')} *
+                  </label>
                   <input
                     type="text"
                     value={fpoName}
                     onChange={(e) => setFpoName(e.target.value)}
                     placeholder="Anand Tomato Producer Co-operative Ltd"
                     required
-                    className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">Registration Number *</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('Registration Number', 'Registration Number')} *
+                    </label>
                     <input
                       type="text"
                       value={fpoRegNum}
                       onChange={(e) => setFpoRegNum(e.target.value)}
                       placeholder="FPO-GUJ-2026-1029"
                       required
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold text-stone-300 mb-1">District</label>
+                    <label className="block font-semibold text-stone-700 mb-1">
+                      {t('District', 'District')}
+                    </label>
                     <input
                       type="text"
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-stone-300 mb-1">FPO Address</label>
+                  <label className="block font-semibold text-stone-700 mb-1">
+                    {t('FPO Address', 'FPO Address')}
+                  </label>
                   <input
                     type="text"
                     value={fpoAddress}
                     onChange={(e) => setFpoAddress(e.target.value)}
                     placeholder="APMC Market Yard Gate 2, Anand"
-                    className="w-full bg-stone-900 border border-stone-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-stone-900 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
               </>
@@ -301,27 +341,27 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full font-bold py-3 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm mt-4 ${
+              className={`w-full font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm mt-4 ${
                 roleTab === 'FARMER'
                   ? 'bg-amber-500 hover:bg-amber-400 text-stone-950'
-                  : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                  : 'bg-emerald-800 hover:bg-emerald-700 text-white'
               }`}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating Account...
+                  {t('Creating Account...', 'Creating Account...')}
                 </>
               ) : (
-                `Complete ${roleTab === 'FARMER' ? 'Farmer' : 'FPO Manager'} Registration`
+                `${t('Register', 'Complete Registration')}`
               )}
             </button>
           </form>
 
-          <div className="mt-5 text-center text-xs text-stone-400">
-            Already registered?{' '}
-            <Link href="/auth/login" className="text-amber-400 font-bold hover:underline">
-              Sign In Here
+          <div className="mt-5 text-center text-xs text-stone-600 pt-4 border-t border-stone-200">
+            {t('Already registered?', 'Already registered?')}{' '}
+            <Link href="/auth/login" className="text-emerald-700 font-bold hover:underline">
+              {t('Sign In Here', 'Sign In Here')}
             </Link>
           </div>
         </div>
