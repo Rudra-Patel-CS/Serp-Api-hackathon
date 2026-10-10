@@ -14,9 +14,7 @@ import {
   FileText,
   Loader2,
   Share2,
-  HelpCircle,
   ExternalLink,
-  CheckCircle2,
   Globe,
 } from 'lucide-react'
 
@@ -46,10 +44,10 @@ export default function FarmerMarketsPage() {
       if (res.success && res.data) {
         setAnalysis(res.data)
       } else {
-        toast.error('Market analysis query failed')
+        toast.error(t('Market analysis query failed', 'Market analysis query failed'))
       }
     } catch (err) {
-      toast.error('Connection error running market analysis')
+      toast.error(t('Connection error running market analysis', 'Connection error running market analysis'))
     } finally {
       setIsLoading(false)
     }
@@ -76,7 +74,7 @@ export default function FarmerMarketsPage() {
 
     const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`
     window.open(waUrl, '_blank')
-    toast.success('Kisan Bahi Realization Voucher shared via WhatsApp!')
+    toast.success(t('Kisan Bahi Realization Voucher shared via WhatsApp!', 'Kisan Bahi Realization Voucher shared via WhatsApp!'))
   }
 
   return (
@@ -90,7 +88,10 @@ export default function FarmerMarketsPage() {
               {t('Market Intelligence & Mandi Comparison', 'Market Intelligence & Mandi Comparison')}
             </h1>
             <p className="text-stone-600 text-xs mt-1">
-              Compare APMC market rates after accounting for distance, transport freight, mandi cess, and moisture shrinkage.
+              {t(
+                'Compare APMC market rates after accounting for distance, transport freight, mandi cess, and moisture shrinkage.',
+                'Compare APMC market rates after accounting for distance, transport freight, mandi cess, and moisture shrinkage.'
+              )}
             </p>
           </div>
 
@@ -98,7 +99,7 @@ export default function FarmerMarketsPage() {
           {analysis?.dataStatus && (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-extrabold border shadow-xs bg-emerald-50 border-emerald-300 text-emerald-900">
               <Globe className="w-4 h-4 text-emerald-700 animate-pulse" />
-              <span>{analysis.dataStatus.badge || 'LIVE WEB EVIDENCE'}</span>
+              <span>{t(analysis.dataStatus.badge, analysis.dataStatus.badge || 'LIVE WEB EVIDENCE')}</span>
             </div>
           )}
         </div>
@@ -107,7 +108,7 @@ export default function FarmerMarketsPage() {
         <div className="bg-emerald-950 text-white p-6 rounded-2xl border border-emerald-800 shadow-lg">
           <div className="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider mb-4">
             <Calculator className="w-4 h-4" />
-            Net Realization Calculator Query
+            {t('Net Realization Calculator Query', 'Net Realization Calculator Query')}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
@@ -118,12 +119,12 @@ export default function FarmerMarketsPage() {
                 onChange={(e) => setCropName(e.target.value)}
                 className="w-full bg-emerald-900 border border-emerald-700 rounded-lg p-2.5 text-white font-medium focus:ring-1 focus:ring-amber-400"
               >
-                <option value="Tomato">Tomato (Tameta)</option>
-                <option value="Onion">Red Onion (Dungri)</option>
-                <option value="Potato">Potato (Bataka)</option>
-                <option value="Wheat">Sharbati Wheat</option>
-                <option value="Cotton">Cotton (Kapas)</option>
-                <option value="Groundnut">Groundnut (Magfali)</option>
+                <option value="Tomato">{t('Tomato', 'Tomato (Tameta)')}</option>
+                <option value="Onion">{t('Onion', 'Red Onion (Dungri)')}</option>
+                <option value="Potato">{t('Potato', 'Potato (Bataka)')}</option>
+                <option value="Wheat">{t('Wheat', 'Sharbati Wheat')}</option>
+                <option value="Cotton">{t('Cotton', 'Cotton (Kapas)')}</option>
+                <option value="Groundnut">{t('Groundnut', 'Groundnut (Magfali)')}</option>
               </select>
             </div>
 
@@ -153,7 +154,7 @@ export default function FarmerMarketsPage() {
                 disabled={isLoading}
                 className="w-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold py-2.5 px-4 rounded-lg shadow transition-all flex items-center justify-center gap-2"
               >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-stone-950" /> : t('Analyze market', 'Run Market Analysis')}
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-stone-950" /> : t('Run Market Analysis', 'Run Market Analysis')}
               </button>
             </div>
           </div>
@@ -165,11 +166,11 @@ export default function FarmerMarketsPage() {
             <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
               <div className="p-5 border-b border-stone-200 flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-bold text-stone-900">APMC Mandi Net Realization Comparison</h2>
-                  <p className="text-stone-500 text-xs mt-0.5">Ranked by highest net cash return in your pocket.</p>
+                  <h2 className="text-lg font-bold text-stone-900">{t('APMC Mandi Net Realization Comparison', 'APMC Mandi Net Realization Comparison')}</h2>
+                  <p className="text-stone-500 text-xs mt-0.5">{t('Ranked by highest net cash return in your pocket.', 'Ranked by highest net cash return in your pocket.')}</p>
                 </div>
                 <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">
-                  {analysis.comparisons.length} Markets Evaluated
+                  {analysis.comparisons.length} {t('Markets Evaluated', 'Markets Evaluated')}
                 </span>
               </div>
 
@@ -177,14 +178,14 @@ export default function FarmerMarketsPage() {
                 <table className="w-full text-left text-xs text-stone-700">
                   <thead className="bg-stone-50 text-stone-600 font-bold uppercase border-b border-stone-200">
                     <tr>
-                      <th className="p-3.5">Mandi Name</th>
-                      <th className="p-3.5">Distance</th>
-                      <th className="p-3.5">Gross Rate (/qtl)</th>
-                      <th className="p-3.5">Freight Deduction</th>
-                      <th className="p-3.5">Cess & Handling</th>
-                      <th className="p-3.5">Opportunity Score</th>
-                      <th className="p-3.5">Estimated Net In-Hand</th>
-                      <th className="p-3.5 text-right">Action</th>
+                      <th className="p-3.5">{t('Mandi Name', 'Mandi Name')}</th>
+                      <th className="p-3.5">{t('Distance', 'Distance')}</th>
+                      <th className="p-3.5">{t('Gross Rate (/qtl)', 'Gross Rate (/qtl)')}</th>
+                      <th className="p-3.5">{t('Freight Deduction', 'Freight Deduction')}</th>
+                      <th className="p-3.5">{t('Cess & Handling', 'Cess & Handling')}</th>
+                      <th className="p-3.5">{t('Opportunity Score', 'Opportunity Score')}</th>
+                      <th className="p-3.5">{t('Estimated Net In-Hand', 'Estimated Net In-Hand')}</th>
+                      <th className="p-3.5 text-right">{t('Action', 'Action')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-stone-100 font-medium">
@@ -194,21 +195,21 @@ export default function FarmerMarketsPage() {
                           {mandi.name}
                           {index === 0 && (
                             <span className="ml-2 text-[10px] bg-amber-500 text-stone-950 font-black px-2 py-0.5 rounded">
-                              BEST CHOICE
+                              {t('BEST CHOICE', 'BEST CHOICE')}
                             </span>
                           )}
                         </td>
                         <td className="p-3.5">{mandi.distanceKm} km</td>
                         <td className="p-3.5 font-bold text-stone-900">
                           ₹{mandi.grossPerQtl}
-                          <span className="block text-[10px] text-emerald-700 font-normal">OFFICIAL MARKET DATA</span>
+                          <span className="block text-[10px] text-emerald-700 font-normal">{t('OFFICIAL MARKET DATA', 'OFFICIAL MARKET DATA')}</span>
                         </td>
                         <td className="p-3.5 text-rose-700">-₹{mandi.totalFreight}</td>
                         <td className="p-3.5 text-rose-700">-₹{mandi.totalCess + mandi.totalHandling}</td>
                         <td className="p-3.5">
                           <div className="flex items-center gap-1.5">
                             <span className="font-bold text-emerald-800">{mandi.score}/100</span>
-                            <span className="text-[10px] text-stone-500">({mandi.badgeText})</span>
+                            <span className="text-[10px] text-stone-500">({t(mandi.badgeText, mandi.badgeText)})</span>
                           </div>
                         </td>
                         <td className="p-3.5 font-black text-emerald-800 text-sm">
@@ -220,7 +221,7 @@ export default function FarmerMarketsPage() {
                             className="bg-emerald-800 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow-xs"
                           >
                             <FileText className="w-3.5 h-3.5" />
-                            Kisan Bahi Slip
+                            {t('Kisan Bahi Slip', 'Kisan Bahi Slip')}
                           </button>
                         </td>
                       </tr>
@@ -236,16 +237,16 @@ export default function FarmerMarketsPage() {
                 <div>
                   <h3 className="text-base font-bold text-stone-900 mb-3 flex items-center gap-2">
                     <Award className="w-5 h-5 text-amber-500" />
-                    Opportunity Score Breakdown ({analysis.bestMarket.score}/100)
+                    {t('Opportunity Score Breakdown', 'Opportunity Score Breakdown')} ({analysis.bestMarket.score}/100)
                   </h3>
                   <p className="text-xs text-stone-600 leading-relaxed mb-4">
-                    Our scoring model evaluates 5 transparent metrics rather than a hidden AI score:
+                    {t('scoringModelDesc', 'Our scoring model evaluates 5 transparent metrics rather than a hidden AI score:')}
                   </p>
 
                   <div className="space-y-3 text-xs">
                     <div>
                       <div className="flex justify-between font-semibold mb-1">
-                        <span>Price Signal Strength</span>
+                        <span>{t('Price Signal Strength', 'Price Signal Strength')}</span>
                         <span>{analysis.bestMarket.components.priceSignal}/100</span>
                       </div>
                       <div className="w-full bg-stone-100 rounded-full h-2">
@@ -255,7 +256,7 @@ export default function FarmerMarketsPage() {
 
                     <div>
                       <div className="flex justify-between font-semibold mb-1">
-                        <span>Buyer Availability</span>
+                        <span>{t('Buyer Availability', 'Buyer Availability')}</span>
                         <span>{analysis.bestMarket.components.buyerAvailability}/100</span>
                       </div>
                       <div className="w-full bg-stone-100 rounded-full h-2">
@@ -265,7 +266,7 @@ export default function FarmerMarketsPage() {
 
                     <div>
                       <div className="flex justify-between font-semibold mb-1">
-                        <span>Logistics Convenience</span>
+                        <span>{t('Logistics Convenience', 'Logistics Convenience')}</span>
                         <span>{analysis.bestMarket.components.logistics}/100</span>
                       </div>
                       <div className="w-full bg-stone-100 rounded-full h-2">
@@ -278,16 +279,16 @@ export default function FarmerMarketsPage() {
                 {/* Sell Now vs Wait Scenario */}
                 <div className="bg-amber-50 p-5 rounded-xl border border-amber-200 flex flex-col justify-between">
                   <div>
-                    <h4 className="font-bold text-stone-900 text-sm mb-1">Sell Now vs. Wait Advice</h4>
+                    <h4 className="font-bold text-stone-900 text-sm mb-1">{t('Sell Now vs. Wait Advice', 'Sell Now vs. Wait Advice')}</h4>
                     <div className="text-xs font-bold text-emerald-800 mb-2">
-                      Recommendation: {analysis.sellVsWait.recommendation}
+                      {t('Recommendation:', 'Recommendation:')} {analysis.sellVsWait.recommendation}
                     </div>
                     <p className="text-stone-700 text-xs leading-relaxed mb-3">
                       {analysis.sellVsWait.reasoning}
                     </p>
                   </div>
                   <div className="text-[11px] text-amber-900/80 bg-amber-100 p-2.5 rounded-lg border border-amber-300">
-                    <strong>Disclaimer:</strong> {analysis.sellVsWait.disclaimer}
+                    <strong>{t('Disclaimer:', 'Disclaimer:')}</strong> {analysis.sellVsWait.disclaimer}
                   </div>
                 </div>
               </div>
@@ -299,10 +300,10 @@ export default function FarmerMarketsPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
                     <Globe className="w-5 h-5 text-emerald-700" />
-                    Supporting Web Market Evidence & News Signals
+                    {t('Supporting Web Market Evidence & News Signals', 'Supporting Web Market Evidence & News Signals')}
                   </h3>
                   <span className="text-xs bg-emerald-100 text-emerald-900 font-bold px-3 py-1 rounded-full border border-emerald-300">
-                    {analysis.dataStatus?.badge || 'LIVE WEB EVIDENCE'}
+                    {t(analysis.dataStatus?.badge, analysis.dataStatus?.badge || 'LIVE WEB EVIDENCE')}
                   </span>
                 </div>
 
@@ -319,7 +320,7 @@ export default function FarmerMarketsPage() {
                       </div>
                       <div className="mt-3 pt-2 border-t border-stone-200 flex items-center justify-between">
                         <span className="text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">
-                          {ev.sourceType === 'google_news' ? 'GOOGLE NEWS' : ev.sourceType === 'google_search' ? 'GOOGLE SEARCH' : 'DEMO SIGNAL'}
+                          {ev.sourceType === 'google_news' ? t('GOOGLE NEWS', 'GOOGLE NEWS') : ev.sourceType === 'google_search' ? t('GOOGLE SEARCH', 'GOOGLE SEARCH') : t('DEMO SIGNAL', 'DEMO SIGNAL')}
                         </span>
                         <a
                           href={ev.sourceUrl || '#'}
@@ -327,7 +328,7 @@ export default function FarmerMarketsPage() {
                           rel="noreferrer"
                           className="text-emerald-700 font-bold hover:underline flex items-center gap-1 text-[11px]"
                         >
-                          Verify Source <ExternalLink className="w-3 h-3" />
+                          {t('Verify Source', 'Verify Source')} <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>
                     </div>

@@ -76,6 +76,41 @@ const phrases: Record<string, [string, string, string]> = {
   'Waiting for buyer offers': ['Waiting for buyer offers', 'खरीदार प्रस्तावों की प्रतीक्षा है', 'ખરીદદાર પ્રસ્તાવોની રાહ જોઈ રહ્યા છીએ'],
   'Review Buyer Offers': ['Review Buyer Offers', 'प्रस्ताव समीक्षा करें', 'પ્રસ્તાવોની સમીક્ષા કરો'],
 
+  // Market Analysis Section
+  'Market Intelligence & Mandi Comparison': ['Market Intelligence & Mandi Comparison', 'मंडी बुद्धिमत्ता व तुलना', 'બજાર બુદ્ધિમત્તા અને સરખામણી'],
+  'Net Realization Calculator Query': ['Net Realization Calculator Query', 'शुद्ध प्राप्ति कैलकुलेटर', 'ચોખ્ખું વળતર કેલ્ક્યુલેટર'],
+  'Run Market Analysis': ['Run Market Analysis', 'मंडी का विश्लेषण करें', 'બજારનું વિશ્લેષણ કરો'],
+  'APMC Mandi Net Realization Comparison': ['APMC Mandi Net Realization Comparison', 'एपीएमसी मंडी शुद्ध प्राप्ति तुलना', 'APMC બજાર ચોખ્ખું વળતર સરખામણી'],
+  'Ranked by highest net cash return in your pocket.': ['Ranked by highest net cash return in your pocket.', 'आपकी जेब में उच्चतम शुद्ध नकद प्राप्ति के आधार पर श्रेणीबद्ध।', 'તમારા ખિસ્સામાં સૌથી વધુ ચોખ્ખી રોકડ રકમના આધારે વર્ગીકૃત.'],
+  'Markets Evaluated': ['Markets Evaluated', 'मंडियों का मूल्यांकन', 'બજારોનું મૂલ્યાંકન'],
+  'Mandi Name': ['Mandi Name', 'मंडी का नाम', 'બજારનું નામ'],
+  Distance: ['Distance', 'दूरी', 'અંતર'],
+  'Gross Rate (/qtl)': ['Gross Rate (/qtl)', 'सकल दर (/क्विंटल)', 'કુલ ભાવ (/ક્વિન્ટલ)'],
+  'Freight Deduction': ['Freight Deduction', 'भाड़ा कटौती', 'ભાડું કપાત'],
+  'Cess & Handling': ['Cess & Handling', 'सेस व हमाली', 'શેસ અને હમાલી'],
+  'Opportunity Score': ['Opportunity Score', 'अवसर स्कोर', 'તક સ્કોર'],
+  'Estimated Net In-Hand': ['Estimated Net In-Hand', 'अनुमानित शुद्ध प्राप्ति', 'અંદાજિત ચોખ્ખું વળતર'],
+  Action: ['Action', 'कार्रवाई', 'પગલાં'],
+  'BEST CHOICE': ['BEST CHOICE', 'सर्वश्रेष्ठ विकल्प', 'શ્રેષ્ઠ વિકલ્પ'],
+  'Kisan Bahi Slip': ['Kisan Bahi Slip', 'किसान बही पर्ची', 'કિસાન વહી સ્લિપ'],
+
+  // Opportunity Score & Advice
+  'Opportunity Score Breakdown': ['Opportunity Score Breakdown', 'अवसर स्कोर विवरण', 'તક સ્કોર વિગતો'],
+  'scoringModelDesc': ['Our scoring model evaluates 5 transparent metrics rather than a hidden AI score:', 'हमारा मॉडल छिपे हुए AI स्कोर के बजाय 5 पारदर्शी मानकों का मूल्यांकन करता है:', 'અમારું મોડેલ છુપાયેલા AI સ્કોરના બદલે 5 પારદર્શક ધોરણોનું મૂલ્યાંકન કરે છે:'],
+  'Price Signal Strength': ['Price Signal Strength', 'मूल्य संकेत शक्ति', 'ભાવ સંકેત શક્તિ'],
+  'Buyer Availability': ['Buyer Availability', 'खरीदार उपलब्धता', 'ખરીદદાર ઉપલબ્ધતા'],
+  'Logistics Convenience': ['Logistics Convenience', 'परिवहन सुविधा', 'લોજિસ્ટિક્સ સુવિધા'],
+  'Sell Now vs. Wait Advice': ['Sell Now vs. Wait Advice', 'अभी बेचें बनाम प्रतीक्षा सलाह', 'હમણાં વેચો વિરુદ્ધ રાહ જોવાની સલાહ'],
+  'Recommendation:': ['Recommendation:', 'सिफारिश:', 'ભલામણ:'],
+  'Disclaimer:': ['Disclaimer:', 'अस्वीकरण:', 'અસ્વીકરણ:'],
+
+  // Web Evidence & News Signals
+  'Supporting Web Market Evidence & News Signals': ['Supporting Web Market Evidence & News Signals', 'वेब मंडी साक्ष्य व समाचार संकेत', 'વેબ બજાર પુરાવા અને સમાચાર સંકેતો'],
+  'Verify Source': ['Verify Source', 'स्रोतः सत्यापित करें', 'સ્રોત ચકાસો'],
+  'GOOGLE NEWS': ['GOOGLE NEWS', 'गूगल समाचार', 'ગુગલ ન્યૂઝ'],
+  'GOOGLE SEARCH': ['GOOGLE SEARCH', 'गूगल खोज', 'ગુગલ સર્ચ'],
+  'DEMO SIGNAL': ['DEMO SIGNAL', 'डेमो संकेत', 'ડેમો સંકેત'],
+
   // FPO Dashboard Metric Cards & Action Tiles
   'MEMBER FARMERS': ['MEMBER FARMERS', 'सदस्य किसान', 'સભ્ય ખેડૂતો'],
   'TOTAL PRODUCE VOLUME': ['TOTAL PRODUCE VOLUME', 'कुल उपज मात्रा', 'કુલ પાક જથ્થો'],
@@ -97,7 +132,7 @@ const phrases: Record<string, [string, string, string]> = {
   'Farmer Name': ['Farmer Name', 'किसान का नाम', 'ખેડૂતનું નામ'],
   'Grade Quality': ['Grade Quality', 'गुणवत्ता ग्रेड', 'ગુણવત્તા ગ્રેડ'],
 
-  // Admin Navigation
+  // Admin Navigation & Metrics
   'User Directory': ['User Directory', 'उपयोगकर्ता निर्देशिका', 'વપરાશકર્તા ડિરેક્ટરી'],
   Farmers: ['Farmers', 'किसान', 'ખેડૂતો'],
   FPOs: ['FPOs', 'एफपीओ', 'FPO'],
@@ -105,8 +140,6 @@ const phrases: Record<string, [string, string, string]> = {
   'Fleet Live Track': ['Fleet Live Track', 'लाइव बेड़ा ट्रैकिंग', 'લાઇવ વાહન ટ્રેકિંગ'],
   'Audit Logs': ['Audit Logs', 'सुरक्षा ऑडिट लॉग', 'સુરક્ષા ઓડિટ લૉગ્સ'],
   'System Health': ['System Health', 'सिस्टम स्थिति', 'સિસ્ટમ હેલ્થ'],
-
-  // Admin Dashboard Headlines & Cards
   'Platform Governance Overview': ['Platform Governance Overview', 'मंच प्रशासन अवलोकन', 'પ્લેટફોર્મ ગવર્નન્સ ઝાંખી'],
   'Live database transaction metrics, active user distribution, fleet tracking, and security audit logs.': [
     'Live database transaction metrics, active user distribution, fleet tracking, and security audit logs.',
