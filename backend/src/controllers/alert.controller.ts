@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '../config/db'
 import { sendSuccess, sendError } from '../utils/response.util'
+import { memoryDbStore } from '../store/memory-db.store'
 
 function isDbAuthError(error: any): boolean {
   return (
@@ -36,7 +37,7 @@ export async function getUserNotifications(req: Request, res: Response) {
     return sendSuccess(res, notifications)
   } catch (error: any) {
     if (isDbAuthError(error)) {
-      return sendSuccess(res, FALLBACK_ALERTS)
+      return sendSuccess(res, memoryDbStore.getAlerts())
     }
     return sendError(res, error.message || 'Failed to fetch notifications', 500, 'SERVER_ERROR')
   }

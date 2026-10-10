@@ -53,6 +53,28 @@ const DEFAULT_USERS: any[] = [
     farmerProfile: { id: 'FP-001', village: 'Mogri', taluka: 'Anand', district: 'Anand', state: 'Gujarat', landArea: 4.5, primaryCrops: 'Tomato, Red Onion' },
   },
   {
+    id: 'DEMO-FARMER-002',
+    name: 'Maganbhai Patel',
+    email: 'magan@demo.krishiintel.local',
+    phone: '9876543213',
+    role: 'FARMER',
+    status: 'ACTIVE',
+    preferredLanguage: 'gu',
+    createdAt: new Date().toISOString(),
+    farmerProfile: { id: 'FP-002', village: 'Nadiad', taluka: 'Nadiad', district: 'Kheda', state: 'Gujarat', landArea: 6.0, primaryCrops: 'Potato, Wheat' },
+  },
+  {
+    id: 'DEMO-FARMER-003',
+    name: 'Sureshbhai Parmar',
+    email: 'suresh@demo.krishiintel.local',
+    phone: '9876543214',
+    role: 'FARMER',
+    status: 'ACTIVE',
+    preferredLanguage: 'hi',
+    createdAt: new Date().toISOString(),
+    farmerProfile: { id: 'FP-003', village: 'Borsad', taluka: 'Borsad', district: 'Anand', state: 'Gujarat', landArea: 8.2, primaryCrops: 'Cotton, Groundnut' },
+  },
+  {
     id: 'DEMO-FPO-001',
     name: 'Anand Farmers Co-operative',
     email: 'fpo@demo.krishiintel.local',
@@ -76,6 +98,117 @@ const DEFAULT_USERS: any[] = [
   },
 ]
 
+const DEFAULT_BUYERS: any[] = [
+  {
+    id: 'BUYER-01',
+    businessName: 'Gujarat Agro Processors Ltd',
+    buyerType: 'PROCESSOR',
+    city: 'Vadodara',
+    district: 'Vadodara',
+    rating: 4.8,
+    contactPhone: '9825012345',
+    requirements: [{ cropId: 'CROP-TOMATO-01', minQuantityKg: 500, maxPricePerKg: 35 }],
+  },
+  {
+    id: 'BUYER-02',
+    businessName: 'Saurashtra Wholesale Traders',
+    buyerType: 'WHOLESALER',
+    city: 'Rajkot',
+    district: 'Rajkot',
+    rating: 4.6,
+    contactPhone: '9825054321',
+    requirements: [{ cropId: 'CROP-ONION-02', minQuantityKg: 1000, maxPricePerKg: 38 }],
+  },
+  {
+    id: 'BUYER-03',
+    businessName: 'Reliance Retail Agro Division',
+    buyerType: 'RETAILER',
+    city: 'Ahmedabad',
+    district: 'Ahmedabad',
+    rating: 4.9,
+    contactPhone: '9825099887',
+    requirements: [{ cropId: 'CROP-POTATO-03', minQuantityKg: 2000, maxPricePerKg: 25 }],
+  },
+  {
+    id: 'BUYER-04',
+    businessName: 'Amul Dairy & Produce Co-operative',
+    buyerType: 'INSTITUTION',
+    city: 'Anand',
+    district: 'Anand',
+    rating: 4.9,
+    contactPhone: '9825011223',
+    requirements: [{ cropId: 'CROP-GROUNDNUT-05', minQuantityKg: 1500, maxPricePerKg: 62 }],
+  },
+  {
+    id: 'BUYER-05',
+    businessName: 'Adani Wilmar Agri Export House',
+    buyerType: 'EXPORTER',
+    city: 'Mundra',
+    district: 'Kutch',
+    rating: 4.7,
+    contactPhone: '9825033445',
+    requirements: [{ cropId: 'CROP-COTTON-04', minQuantityKg: 3000, maxPricePerKg: 72 }],
+  },
+]
+
+const DEFAULT_OFFERS: any[] = [
+  {
+    id: 'OFFER-01',
+    offerNumber: 'OFF-9011',
+    lotId: 'LOT-DEMO-001',
+    buyerId: 'BUYER-01',
+    offeredPrice: 34.5,
+    quantityKg: 5000,
+    status: 'PENDING',
+    createdAt: new Date().toISOString(),
+    buyer: DEFAULT_BUYERS[0],
+  },
+  {
+    id: 'OFFER-02',
+    offerNumber: 'OFF-9012',
+    lotId: 'LOT-DEMO-002',
+    buyerId: 'BUYER-02',
+    offeredPrice: 31.5,
+    quantityKg: 1200,
+    status: 'ACCEPTED',
+    createdAt: new Date().toISOString(),
+    buyer: DEFAULT_BUYERS[1],
+  },
+  {
+    id: 'OFFER-03',
+    offerNumber: 'OFF-9013',
+    lotId: 'LOT-DEMO-003',
+    buyerId: 'BUYER-03',
+    offeredPrice: 22.0,
+    quantityKg: 8000,
+    status: 'PENDING',
+    createdAt: new Date().toISOString(),
+    buyer: DEFAULT_BUYERS[2],
+  },
+  {
+    id: 'OFFER-04',
+    offerNumber: 'OFF-9014',
+    lotId: 'LOT-DEMO-004',
+    buyerId: 'BUYER-05',
+    offeredPrice: 68.0,
+    quantityKg: 3500,
+    status: 'PENDING',
+    createdAt: new Date().toISOString(),
+    buyer: DEFAULT_BUYERS[4],
+  },
+  {
+    id: 'OFFER-05',
+    offerNumber: 'OFF-9015',
+    lotId: 'LOT-DEMO-005',
+    buyerId: 'BUYER-04',
+    offeredPrice: 59.0,
+    quantityKg: 6000,
+    status: 'ACCEPTED',
+    createdAt: new Date().toISOString(),
+    buyer: DEFAULT_BUYERS[3],
+  },
+]
+
 const DEFAULT_LOTS: DemoLot[] = [
   {
     id: 'LOT-DEMO-001',
@@ -94,7 +227,7 @@ const DEFAULT_LOTS: DemoLot[] = [
     crop: DEFAULT_CROPS[1],
     farmer: { id: 'DEMO-FARMER-001', name: 'Ramesh Patel', phone: '9876543210' },
     fpo: { id: 'FPO-001', name: 'Anand Tomato & Produce Co-operative Ltd' },
-    offers: [],
+    offers: [DEFAULT_OFFERS[0]],
     shipments: [],
   },
   {
@@ -114,8 +247,207 @@ const DEFAULT_LOTS: DemoLot[] = [
     crop: DEFAULT_CROPS[0],
     farmer: { id: 'DEMO-FARMER-001', name: 'Ramesh Patel', phone: '9876543210' },
     fpo: { id: 'FPO-001', name: 'Anand Tomato & Produce Co-operative Ltd' },
-    offers: [],
+    offers: [DEFAULT_OFFERS[1]],
     shipments: [],
+  },
+  {
+    id: 'LOT-DEMO-003',
+    lotNumber: 'LOT-882010',
+    farmerId: 'DEMO-FARMER-002',
+    fpoId: 'FPO-001',
+    cropId: 'CROP-POTATO-03',
+    quantityKg: 8000,
+    grade: 'Grade B',
+    moisture: '15%',
+    farmPlot: 'Nadiad North Field',
+    harvestDate: new Date().toISOString(),
+    location: 'Nadiad, Gujarat',
+    status: 'READY',
+    createdAt: new Date().toISOString(),
+    crop: DEFAULT_CROPS[2],
+    farmer: { id: 'DEMO-FARMER-002', name: 'Maganbhai Patel', phone: '9876543213' },
+    fpo: { id: 'FPO-001', name: 'Anand Tomato & Produce Co-operative Ltd' },
+    offers: [DEFAULT_OFFERS[2]],
+    shipments: [],
+  },
+  {
+    id: 'LOT-DEMO-004',
+    lotNumber: 'LOT-882009',
+    farmerId: 'DEMO-FARMER-003',
+    fpoId: 'FPO-001',
+    cropId: 'CROP-COTTON-04',
+    quantityKg: 3500,
+    grade: 'Grade A',
+    moisture: '8%',
+    farmPlot: 'Borsad Cotton Estate',
+    harvestDate: new Date().toISOString(),
+    location: 'Borsad, Gujarat',
+    status: 'READY',
+    createdAt: new Date().toISOString(),
+    crop: DEFAULT_CROPS[3],
+    farmer: { id: 'DEMO-FARMER-003', name: 'Sureshbhai Parmar', phone: '9876543214' },
+    fpo: { id: 'FPO-001', name: 'Anand Tomato & Produce Co-operative Ltd' },
+    offers: [DEFAULT_OFFERS[3]],
+    shipments: [],
+  },
+  {
+    id: 'LOT-DEMO-005',
+    lotNumber: 'LOT-882008',
+    farmerId: 'DEMO-FARMER-001',
+    fpoId: 'FPO-001',
+    cropId: 'CROP-GROUNDNUT-05',
+    quantityKg: 6000,
+    grade: 'Grade A',
+    moisture: '10%',
+    farmPlot: 'Rajkot Field 3',
+    harvestDate: new Date().toISOString(),
+    location: 'Rajkot, Gujarat',
+    status: 'READY',
+    createdAt: new Date().toISOString(),
+    crop: DEFAULT_CROPS[4],
+    farmer: { id: 'DEMO-FARMER-001', name: 'Ramesh Patel', phone: '9876543210' },
+    fpo: { id: 'FPO-001', name: 'Anand Tomato & Produce Co-operative Ltd' },
+    offers: [DEFAULT_OFFERS[4]],
+    shipments: [],
+  },
+]
+
+const DEFAULT_PROVIDERS: any[] = [
+  {
+    id: 'LOG-01',
+    name: 'Saurashtra Agro Logistics Pvt Ltd',
+    contactPhone: '9876500001',
+    rating: 4.8,
+    vehicles: [{ id: 'VEH-01', vehicleType: 'Eicher Pro 2059 (14ft)', registrationNumber: 'GJ-07-AT-8821', driverName: 'Vikrambhai' }],
+  },
+  {
+    id: 'LOG-02',
+    name: 'Gujarat Express Transport Co.',
+    contactPhone: '9876500002',
+    rating: 4.7,
+    vehicles: [{ id: 'VEH-02', vehicleType: 'Tata 407 LPT (10ft)', registrationNumber: 'GJ-01-EX-4412', driverName: 'Jigneshbhai' }],
+  },
+  {
+    id: 'LOG-03',
+    name: 'APMC Trucking Federation',
+    contactPhone: '9876500003',
+    rating: 4.9,
+    vehicles: [{ id: 'VEH-03', vehicleType: 'BharatBenz 6-Wheeler (19ft)', registrationNumber: 'GJ-06-TF-9901', driverName: 'Rajeshbhai' }],
+  },
+  {
+    id: 'LOG-04',
+    name: 'Kheda Cargo Carriers',
+    contactPhone: '9876500004',
+    rating: 4.6,
+    vehicles: [{ id: 'VEH-04', vehicleType: 'Mahindra Blazo X (24ft)', registrationNumber: 'GJ-23-CC-7711', driverName: 'Hiteshbhai' }],
+  },
+  {
+    id: 'LOG-05',
+    name: 'Rajkot Freight Lines',
+    contactPhone: '9876500005',
+    rating: 4.8,
+    vehicles: [{ id: 'VEH-05', vehicleType: 'Ashok Leyland Dost (8ft)', registrationNumber: 'GJ-03-FL-3320', driverName: 'Pravinbhai' }],
+  },
+]
+
+const DEFAULT_SHIPMENTS: any[] = [
+  {
+    id: 'SHIP-DEMO-01',
+    trackingNumber: 'TRK-982104',
+    status: 'IN_TRANSIT',
+    originLocation: 'Anand, Gujarat',
+    destinationLocation: 'Vadodara APMC',
+    estimatedDelivery: new Date(Date.now() + 6 * 3600 * 1000).toISOString(),
+    provider: DEFAULT_PROVIDERS[0],
+    vehicle: DEFAULT_PROVIDERS[0].vehicles[0],
+    locations: [{ latitude: 22.5645, longitude: 72.9289, speed: 45, recordedAt: new Date().toISOString() }],
+  },
+  {
+    id: 'SHIP-DEMO-02',
+    trackingNumber: 'TRK-982105',
+    status: 'DISPATCHED',
+    originLocation: 'Mogri, Gujarat',
+    destinationLocation: 'Rajkot APMC',
+    estimatedDelivery: new Date(Date.now() + 12 * 3600 * 1000).toISOString(),
+    provider: DEFAULT_PROVIDERS[1],
+    vehicle: DEFAULT_PROVIDERS[1].vehicles[0],
+    locations: [{ latitude: 22.2981, longitude: 70.8067, speed: 50, recordedAt: new Date().toISOString() }],
+  },
+  {
+    id: 'SHIP-DEMO-03',
+    trackingNumber: 'TRK-982106',
+    status: 'DELIVERED',
+    originLocation: 'Nadiad, Gujarat',
+    destinationLocation: 'Ahmedabad Vasna APMC',
+    estimatedDelivery: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    provider: DEFAULT_PROVIDERS[2],
+    vehicle: DEFAULT_PROVIDERS[2].vehicles[0],
+    locations: [{ latitude: 23.0225, longitude: 72.5714, speed: 0, recordedAt: new Date().toISOString() }],
+  },
+  {
+    id: 'SHIP-DEMO-04',
+    trackingNumber: 'TRK-982107',
+    status: 'IN_TRANSIT',
+    originLocation: 'Borsad, Gujarat',
+    destinationLocation: 'Mundra Port Export Terminal',
+    estimatedDelivery: new Date(Date.now() + 18 * 3600 * 1000).toISOString(),
+    provider: DEFAULT_PROVIDERS[3],
+    vehicle: DEFAULT_PROVIDERS[3].vehicles[0],
+    locations: [{ latitude: 22.8396, longitude: 69.7131, speed: 62, recordedAt: new Date().toISOString() }],
+  },
+  {
+    id: 'SHIP-DEMO-05',
+    trackingNumber: 'TRK-982108',
+    status: 'DISPATCHED',
+    originLocation: 'Rajkot, Gujarat',
+    destinationLocation: 'Anand APMC Yard',
+    estimatedDelivery: new Date(Date.now() + 8 * 3600 * 1000).toISOString(),
+    provider: DEFAULT_PROVIDERS[4],
+    vehicle: DEFAULT_PROVIDERS[4].vehicles[0],
+    locations: [{ latitude: 22.5645, longitude: 72.9289, speed: 40, recordedAt: new Date().toISOString() }],
+  },
+]
+
+const DEFAULT_ALERTS: any[] = [
+  {
+    id: 'ALT-01',
+    title: 'Tomato Mandi Price Rally',
+    message: 'Rajkot APMC Tomato modal price surged +4.8% to ₹3,620/qtl based on SerpApi live signal.',
+    type: 'PRICE_ALERT',
+    read: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'ALT-02',
+    title: 'New Red Onion Buyer Offer Received',
+    message: 'Gujarat Agro Processors Ltd submitted an offer of ₹34.5/kg for Lot #LOT-882012.',
+    type: 'OFFER_RECEIVED',
+    read: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'ALT-03',
+    title: 'Shipment Dispatch Confirmation',
+    message: 'Logistics truck TRK-982104 has departed Anand APMC en route to Vadodara.',
+    type: 'SHIPMENT_UPDATE',
+    read: true,
+    createdAt: new Date(Date.now() - 3600 * 1000).toISOString(),
+  },
+  {
+    id: 'ALT-04',
+    title: 'GSAMB Mandi Fee Policy Revision',
+    message: 'Gujarat State Agricultural Marketing Board updated APMC cess structure to 0.8%.',
+    type: 'SYSTEM_NOTICE',
+    read: true,
+    createdAt: new Date(Date.now() - 7200 * 1000).toISOString(),
+  },
+  {
+    id: 'ALT-05',
+    title: 'High Buyer Demand Signal Detected',
+    message: 'SerpApi Google Search & News show +18% increased demand for Grade A Cotton in Rajkot.',
+    type: 'DEMAND_ALERT',
+    read: false,
+    createdAt: new Date().toISOString(),
   },
 ]
 
@@ -136,33 +468,15 @@ class MemoryDbStore {
       status: 'ACTIVE',
       members: [
         { farmerId: 'DEMO-FARMER-001', status: 'ACTIVE' },
+        { farmerId: 'DEMO-FARMER-002', status: 'ACTIVE' },
+        { farmerId: 'DEMO-FARMER-003', status: 'ACTIVE' },
       ],
     },
   ]
-  private buyers: any[] = [
-    {
-      id: 'BUYER-01',
-      businessName: 'Gujarat Agro Processors Ltd',
-      buyerType: 'PROCESSOR',
-      city: 'Vadodara',
-      district: 'Vadodara',
-      rating: 4.8,
-      contactPhone: '9825012345',
-      requirements: [{ cropId: 'CROP-TOMATO-01', minQuantityKg: 500, maxPricePerKg: 35 }],
-    },
-    {
-      id: 'BUYER-02',
-      businessName: 'Saurashtra Wholesale Traders',
-      buyerType: 'WHOLESALER',
-      city: 'Rajkot',
-      district: 'Rajkot',
-      rating: 4.6,
-      contactPhone: '9825054321',
-      requirements: [{ cropId: 'CROP-ONION-02', minQuantityKg: 1000, maxPricePerKg: 38 }],
-    },
-  ]
-  private offers: any[] = []
-  private shipments: any[] = []
+  private buyers: any[] = [...DEFAULT_BUYERS]
+  private offers: any[] = [...DEFAULT_OFFERS]
+  private shipments: any[] = [...DEFAULT_SHIPMENTS]
+  private alerts: any[] = [...DEFAULT_ALERTS]
 
   // LOTS OPERATIONS
   getLots(filter?: { farmerId?: string; fpoId?: string; cropId?: string }) {
@@ -275,14 +589,28 @@ class MemoryDbStore {
       offerNumber: `OFF-${Date.now().toString().slice(-5)}`,
       lotId: data.lotId,
       buyerId: data.buyerId || 'BUYER-01',
-      offeredPricePerQtl: parseFloat(data.offeredPricePerQtl) || 3200,
-      totalValue: parseFloat(data.totalValue) || 16000,
+      offeredPrice: parseFloat(data.offeredPrice) || 32,
+      quantityKg: parseFloat(data.quantityKg) || 500,
       status: 'PENDING',
       createdAt: new Date().toISOString(),
       buyer: this.buyers[0],
     }
     this.offers.unshift(newOffer)
     return newOffer
+  }
+
+  // LOGISTICS
+  getProviders() {
+    return [...DEFAULT_PROVIDERS]
+  }
+
+  getShipments() {
+    return [...this.shipments]
+  }
+
+  // ALERTS
+  getAlerts() {
+    return [...this.alerts]
   }
 }
 

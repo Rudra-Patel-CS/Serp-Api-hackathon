@@ -3,6 +3,7 @@ import { prisma } from '../config/db'
 import { sendSuccess, sendError } from '../utils/response.util'
 import { ShipmentStatus } from '@prisma/client'
 import { emitShipmentLocationUpdate } from '../realtime/socket.server'
+import { memoryDbStore } from '../store/memory-db.store'
 
 function isDbAuthError(error: any): boolean {
   return (
@@ -46,7 +47,7 @@ export async function getLogisticsProviders(req: Request, res: Response) {
     return sendSuccess(res, providers)
   } catch (error: any) {
     if (isDbAuthError(error)) {
-      return sendSuccess(res, FALLBACK_PROVIDERS)
+      return sendSuccess(res, memoryDbStore.getProviders())
     }
     return sendError(res, error.message || 'Failed to fetch providers', 500, 'SERVER_ERROR')
   }
@@ -84,7 +85,7 @@ export async function getShipments(req: Request, res: Response) {
     return sendSuccess(res, shipments)
   } catch (error: any) {
     if (isDbAuthError(error)) {
-      return sendSuccess(res, FALLBACK_SHIPMENTS)
+      return sendSuccess(res, memoryDbStore.getShipments())
     }
     return sendError(res, error.message || 'Failed to fetch shipments', 500, 'SERVER_ERROR')
   }
