@@ -171,35 +171,6 @@ function LoginFormContent() {
         </Link>
       </div>
 
-      <div className="mt-6 bg-emerald-50/70 p-4 rounded-xl border border-emerald-200">
-        <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 mb-2">
-          <Sparkles className="w-4 h-4 text-amber-600" />
-          <span>Quick Development Demo Autofill</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <button
-            type="button"
-            onClick={() => fillDemoAccount('FARMER')}
-            className="bg-white hover:bg-emerald-100 text-stone-800 py-2 px-2 rounded-lg border border-emerald-200 text-center font-medium shadow-xs"
-          >
-            {t('Farmer', 'Farmer')}
-          </button>
-          <button
-            type="button"
-            onClick={() => fillDemoAccount('FPO_MANAGER')}
-            className="bg-white hover:bg-emerald-100 text-stone-800 py-2 px-2 rounded-lg border border-emerald-200 text-center font-medium shadow-xs"
-          >
-            FPO Mgr
-          </button>
-          <button
-            type="button"
-            onClick={() => fillDemoAccount('ADMIN')}
-            className="bg-white hover:bg-emerald-100 text-stone-800 py-2 px-2 rounded-lg border border-emerald-200 text-center font-medium shadow-xs"
-          >
-            Admin
-          </button>
-        </div>
-      </div>
     </div>
   )
 }
