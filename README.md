@@ -1,16 +1,24 @@
 # 🌾 KrishiIntel — Agricultural Market Intelligence & Transaction Platform
 
-> **Hackathon Edition powered by SerpApi & Real-Time Logistics Intelligence**  
-> *Know where, when, and to whom to sell your harvest. Compare APMC markets, calculate net realization, find verified buyers, and track live dispatches across Gujarat.*
+> **Hackathon Edition powered by SerpApi (Google Search, Google News, Google Maps) & Real-Time Intelligence**  
+> *Know where, when, and to whom to sell your harvest. Compare APMC markets, calculate net realization, discover bulk buyers, and track live dispatches across Gujarat.*
 
 ---
 
 ## 🌟 Key Features & Hackathon Highlights
 
-- 🔎 **SerpApi Google News Intelligence**: Real-time integration querying Google News (`tbm=nws`) for APMC arrival alerts, trader demand shifts, and logistics news per crop & region.
-- 🧮 **Net Realization & Opportunity Score Engine**: Calculates actual money in hand after accounting for transport freight, loading fees, market commission, distance, and spoilage risk.
-- 🔐 **Role-Based Access Control (RBAC)**: Secure multi-portal system supporting **Farmers**, **FPO Managers**, and **Platform Admins**.
-- 🗄️ **Zero-Setup Database Architecture**: Default SQLite database (`dev.db`) — clone, seed, and run with **0 database configuration or passwords required**! (Optionally supports MySQL).
+- 🔎 **SerpApi 3-Engine Intelligence Architecture**:
+  - **Google Search (`engine=google`)**: Discovers wholesale market reports, regional crop demand signals, and market arrivals.
+  - **Google News (`engine=google_news`)**: Fetches fresh agricultural news, supply disruptions, and APMC arrival alerts.
+  - **Google Maps (`engine=google_maps`)**: Discovers bulk buyers, food processing plants, cold storage units, and transport logistics.
+- 🏷️ **Clear Data Source Badging**:
+  - `LIVE WEB EVIDENCE` / `CACHED WEB EVIDENCE`: Real-time web intelligence retrieved via backend SerpApi endpoints.
+  - `OFFICIAL MARKET DATA`: Verified APMC mandi price records.
+  - `DEMO DATA`: Marked fallback data when API credentials are unconfigured or unavailable.
+  - Candidate leads from Google Maps remain candidate buyer leads until verified by authorized users.
+- 🧮 **Net Realization & Opportunity Score Engine**: Calculates actual money in hand after accounting for transport freight, loading fees, market commission, distance, and spoilage risk (1 Quintal = 100 kg).
+- 🔐 **Role-Based Access Control (RBAC)**: Enforced server-side for **Farmers**, **FPO Managers**, and **Platform Admins**.
+- 🗄️ **MySQL Database Integration**: Configured with Prisma (`schema.prisma` using `provider = "mysql"`).
 - 🛰️ **Real-Time Logistics Telemetry**: Live vehicle dispatch & GPS snapshot tracking powered by Socket.IO.
 
 ---
@@ -19,12 +27,13 @@
 
 ### 1. Prerequisites
 - **Node.js** >= 18.x
+- **MySQL Server** (running locally or remotely)
 - **npm** (comes bundled with Node.js)
 
 ### 2. Clone & Install Dependencies
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/Rudra-Patel-CS/Serp-Api-hackathon.git
 cd Serp-Api-hackathon
 
 # Install dependencies across all monorepo workspaces
@@ -33,29 +42,45 @@ npm --prefix backend install
 npm --prefix frontend install
 ```
 
-### 3. Initialize & Seed Database (1-Command Setup)
-```bash
-# Generate Prisma Client & populate SQLite database with demo data
-npm run db:generate
-npm run db:seed
-```
-
-### 4. Configure Environment Variables (Optional)
-The `.env` file is pre-configured with zero-setup defaults (`file:./dev.db`).  
-To enable **live SerpApi search**:
-1. Get a free API key at [SerpApi.com](https://serpapi.com).
-2. Open `.env` and `.env/backend` and update your key:
+### 3. Database Configuration (`.env`)
+Create or edit `backend/.env` with your MySQL connection string and SerpApi key:
 ```env
-SERPAPI_KEY="your_actual_serpapi_key_here"
+PORT=5000
+NODE_ENV=development
+DATABASE_URL="mysql://root:password@localhost:3306/krishiintel"
+JWT_SECRET="krishiintel_super_secret_jwt_key_2026"
+
+# SerpApi Configuration
+SERPAPI_KEY="your_serpapi_key_here"
+SERPAPI_ENABLED=true
+SERPAPI_TIMEOUT_MS=10000
+SERPAPI_CACHE_TTL_SECONDS=1800
 ```
 
-### 5. Run the Platform
+Generate Prisma client and seed initial data:
 ```bash
-# Start both Express Backend (Port 5000) and Next.js Frontend (Port 3000) concurrently
+npm --prefix backend run db:generate
+npm --prefix backend run db:seed
+```
+
+### 4. Run the Application
+```bash
+# Start Express Backend (Port 5000) and Next.js Frontend (Port 3000) concurrently
 npm run dev
 ```
 
 Visit **http://localhost:3000** in your browser!
+
+---
+
+## 🧪 Testing & Verification Commands
+
+| Command | Description |
+|---|---|
+| `npm --prefix backend test` | Runs the full automated unit test suite (caching, net realization, unit conversion, fallback data) |
+| `npm --prefix backend run test:serpapi` | CLI Live Smoke Test script executing Google Search, News, and Maps engines |
+| `npm --prefix backend run build` | Verifies TypeScript compilation for Express backend |
+| `npm --prefix frontend run build` | Builds production bundle for Next.js frontend |
 
 ---
 
@@ -69,13 +94,16 @@ Visit **http://localhost:3000** in your browser!
 
 ---
 
-## 🔍 How SerpApi Powers KrishiIntel
+## 🔍 SerpApi Integration Details
 
-SerpApi is the central market signal verification engine in KrishiIntel:
+SerpApi requests are handled **100% server-side** in [`backend/src/integrations/serpapi/`](./backend/src/integrations/serpapi/):
+- **`serpapi.client.ts`**: Shared HTTP client with timeouts, status code handling, retries, and API key protection.
+- **`serpapi-cache.service.ts`**: In-memory TTL caching (30 min default) to prevent unnecessary API quota consumption.
+- **`google-search.service.ts`**: Normalizes `engine=google` search results into `NormalizedEvidence`.
+- **`google-news.service.ts`**: Normalizes `engine=google_news` results into `NormalizedEvidence`.
+- **`google-maps.service.ts`**: Discovers candidate leads (`DiscoveredLead`) for buyers, processing plants, cold storage, and logistics.
 
-1. **Backend Integration**: Located in [`backend/src/integrations/serpapi/serpapi.service.ts`](./backend/src/integrations/serpapi/serpapi.service.ts).
-2. **Dynamic Endpoint**: When checking market opportunity scores ([`backend/src/controllers/intelligence.controller.ts`](./backend/src/controllers/intelligence.controller.ts)), the system calls SerpApi with location and crop parameters.
-3. **Evidence Panel**: Search results feed into the **Market News Intelligence & Signal Verification** card on the Farmer & FPO dashboards to give farmers verified news proof alongside price quotes.
+`SERPAPI_KEY` is **never** sent to the client browser or exposed in frontend bundles.
 
 ---
 
@@ -83,48 +111,30 @@ SerpApi is the central market signal verification engine in KrishiIntel:
 
 ```
 Serp-Api-hackathon/
+├── AUDIT.md                  # Complete System & SerpApi Integration Audit
 ├── backend/                  # Express REST API + Socket.IO Server
 │   ├── prisma/               # Database Schema (schema.prisma) & Seed Script (seed.ts)
 │   ├── src/
 │   │   ├── auth/             # JWT & RBAC Controller
-│   │   ├── controllers/      # Market, Farmer, FPO, Buyer, Logistics Controllers
-│   │   ├── integrations/     # SerpApi Search Client (serpapi.service.ts)
-│   │   ├── realtime/         # Socket.IO Gateway
+│   │   ├── controllers/      # Intelligence, Market, Farmer, FPO Controllers
+│   │   ├── integrations/     # SerpApi Search, News, Maps Integration
+│   │   ├── scripts/          # Live SerpApi Smoke Test Script
+│   │   ├── tests/            # Automated Integration & Unit Tests
 │   │   └── services/         # Net Realization & Opportunity Score Algorithms
 ├── frontend/                 # Next.js 16 (App Router) Client Application
 │   ├── app/
-│   │   ├── admin/            # Admin Management Console
-│   │   ├── auth/             # Login, Register & Role Pre-Selection Gateway
-│   │   ├── farmer/           # Farmer Mobile Portal
-│   │   └── fpo/              # FPO Manager Operations Portal
-│   ├── context/              # Authentication Context Provider
+│   │   ├── admin/            # Admin Console
+│   │   ├── farmer/           # Farmer Portal & Markets Analysis View
+│   │   └── fpo/              # FPO Manager Portal
+│   ├── components/           # UI Components & Language Selector
+│   ├── context/              # Auth & Language Context Providers
 │   └── services/             # API Client Gateway
 ├── docs/                     # Full Technical Documentation Architecture
-└── .env                      # Workspace Environment Configuration
+└── README.md
 ```
 
 ---
 
-## 📚 Technical Documentation Suite
+## 📄 License & Attribution
 
-For deeper implementation details, review the detailed documents in the `docs/` folder:
-
-- [`docs/ARCHITECTURE-AUDIT.md`](./docs/ARCHITECTURE-AUDIT.md) - Codebase Audit & Platform Overhaul Summary
-- [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) - Full System Architecture & Data Flows
-- [`docs/API.md`](./docs/API.md) - Complete REST API Endpoint Reference
-- [`docs/DATABASE.md`](./docs/DATABASE.md) - Prisma Schema & Data Models
-- [`docs/RBAC.md`](./docs/RBAC.md) - Access Control & Role Permission Matrix
-- [`docs/REALTIME.md`](./docs/REALTIME.md) - Socket.IO Live Telemetry & Dispatch Tracking
-- [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) - Production Deployment Guide
-- [`docs/TESTING.md`](./docs/TESTING.md) - Verification & Test Execution Guide
-
----
-
-## ⚡ Useful NPM Commands
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Runs Frontend (Port 3000) & Backend (Port 5000) concurrently |
-| `npm run db:generate` | Generates Prisma Client types |
-| `npm run db:seed` | Resets & seeds SQLite database with demo data |
-| `npm run build` | Builds both Frontend & Backend for production |
+Developed for KrishiIntel Agricultural Market Intelligence Platform. Powered by [SerpApi](https://serpapi.com).

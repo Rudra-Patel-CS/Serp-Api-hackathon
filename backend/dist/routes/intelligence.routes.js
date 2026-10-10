@@ -6,4 +6,5 @@ const auth_middleware_1 = require("../middleware/auth.middleware");
 const router = (0, express_1.Router)();
 router.post('/analyze', auth_middleware_1.authenticate, intelligence_controller_1.analyzeMarketOpportunity);
 router.get('/evidence', auth_middleware_1.authenticate, intelligence_controller_1.getEvidenceRecords);
+router.get('/discover-buyers', auth_middleware_1.authenticate, intelligence_controller_1.discoverBuyers);
 exports.default = router;

@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import { serpapiConfig } from '../integrations/serpapi/serpapi.config'
-import { executeSerpApiRequest } from '../integrations/serpapi/serpapi.client'
 import { fetchGoogleSearchEvidence } from '../integrations/serpapi/google-search.service'
 import { fetchGoogleNewsEvidence } from '../integrations/serpapi/google-news.service'
 import { fetchGoogleMapsLeads } from '../integrations/serpapi/google-maps.service'
@@ -60,14 +59,14 @@ async function runLiveSmokeTest() {
   console.log('\n--- [3/3] Testing Google Maps Engine (engine=google_maps) ---')
   console.log('Query: vegetable wholesalers near Rajkot')
   try {
-    const mapsRes = await fetchGoogleMapsLeads('Groundnut', 'Rajkot')
+    const mapsRes = await fetchGoogleMapsLeads('wholesaler', 'Groundnut', 'Rajkot')
     console.log(`Success: ${mapsRes.leads.length > 0}`)
     console.log(`Live Status: ${mapsRes.isLive ? 'LIVE' : 'DEMO/FALLBACK'}`)
     console.log(`Leads Discovered: ${mapsRes.leads.length}`)
     if (mapsRes.leads.length > 0) {
-      console.log(`Sample Lead: "${mapsRes.leads[0].title}" (${mapsRes.leads[0].category})`)
+      console.log(`Sample Lead: "${mapsRes.leads[0].name}" (${mapsRes.leads[0].category})`)
       console.log(`Address: ${mapsRes.leads[0].address || 'N/A'}`)
-      console.log(`Verified Status: ${mapsRes.leads[0].verified ? 'VERIFIED' : 'CANDIDATE ONLY (UNVERIFIED)'}`)
+      console.log(`Verified Status: ${mapsRes.leads[0].status === 'VERIFIED' ? 'VERIFIED' : 'CANDIDATE ONLY (UNVERIFIED)'}`)
     }
   } catch (err: any) {
     console.error('❌ Google Maps Engine failed:', err.message)

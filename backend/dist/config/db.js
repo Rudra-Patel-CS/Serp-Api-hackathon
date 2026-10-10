@@ -10,7 +10,7 @@ const client_1 = require("@prisma/client");
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../.env') });
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env') });
 dotenv_1.default.config();
-const dbUrl = process.env.DATABASE_URL || 'mysql://root:password@localhost:3306/krishiintel';
+const dbUrl = process.env.DATABASE_URL || 'file:./dev.db';
 exports.prisma = new client_1.PrismaClient({
     datasources: {
         db: {
