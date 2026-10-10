@@ -72,6 +72,22 @@ const phrases: Record<string, [string, string, string]> = {
   'Recent Security Audit Logs': ['Recent Security Audit Logs', 'हालिया सुरक्षा ऑडिट लॉग', 'તાજેતરના સુરક્ષા ઓડિટ લૉગ્સ'],
   'View Full Audit Trail': ['View Full Audit Trail', 'पूरा ऑडिट देखें', 'સંપૂર્ણ ઓડિટ જુઓ'],
 
+  // SerpApi Badges & Data Sources
+  'LIVE WEB EVIDENCE': ['LIVE WEB EVIDENCE', 'लाइव वेब साक्ष्य', 'લાઇવ વેબ પુરાવા'],
+  'CACHED WEB EVIDENCE': ['CACHED WEB EVIDENCE', 'कैश किया गया वेब साक्ष्य', 'કેશ કરેલ વેબ પુરાવા'],
+  'OFFICIAL MARKET DATA': ['OFFICIAL MARKET DATA', 'आधिकारिक मंडी डेटा', 'સત્તાવાર બજાર માહિતી'],
+  'DEMO DATA': ['DEMO DATA', 'डेमो डेटा', 'ડેમો માહિતી'],
+  'ESTIMATED VALUE': ['ESTIMATED VALUE', 'अनुमानित मूल्य', 'અંદાજિત મૂલ્ય'],
+  'CANDIDATE ONLY': ['CANDIDATE ONLY', 'केवल उम्मीदवार', 'માત્ર ઉમેદવાર'],
+  UNVERIFIED: ['UNVERIFIED', 'असत्यापित', 'અચકાસાયેલ'],
+  VERIFIED: ['VERIFIED', 'सत्यापित', 'ચકાસાયેલ'],
+
+  // Opportunity Score Badges
+  'Top Net Realization': ['Top Net Realization', 'सर्वश्रेष्ठ निवल प्राप्ति', 'ઉચ્ચતમ ચોખ્ખું વળતર'],
+  'Balanced Option': ['Balanced Option', 'संतुलित विकल्प', 'સંતુલિત વિકલ્પ'],
+  'High Transit Loss Risk': ['High Transit Loss Risk', 'उच्च परिवहन क्षति जोखिम', 'ઉચ્ચ વહન નુકસાન જોખમ'],
+  Recommended: ['Recommended', 'अनुशंसित', 'ભલામણ કરેલ'],
+
   // Authentication Screens
   'Account Authentication': ['Account Authentication', 'खाता प्रमाणीकरण', 'ખાતા ચકાસણી'],
   'Sign in to access your role-specific agricultural workspace.': [
@@ -92,6 +108,16 @@ const phrases: Record<string, [string, string, string]> = {
   ],
   'Change Role Selection': ['Change Role Selection', 'भूमिका बदलें', 'ભૂમિકા બદલો'],
 
+  // Registration & User Inputs
+  'Full Name': ['Full Name', 'पूरा नाम', 'પૂરું નામ'],
+  'Mobile Number': ['Mobile Number', 'मोबाइल नंबर', 'મોબાઈલ નંબર'],
+  'District / City': ['District / City', 'जिला / शहर', 'જીલ્લો / શહેર'],
+  State: ['State', 'राज्य', 'રાજ્ય'],
+  'Total Land (Acres)': ['Total Land (Acres)', 'कुल भूमि (एकड़)', 'કુલ જમીન (એકર)'],
+  'FPO Name': ['FPO Name', 'FPO का नाम', 'FPO નું નામ'],
+  'FPO Registration Number': ['FPO Registration Number', 'FPO पंजीकरण संख्या', 'FPO નોંધણી નંબર'],
+  Register: ['Register', 'पंजीकरण करें', 'રજીસ્ટર કરો'],
+
   // Crops & Units
   Tomato: ['Tomato', 'टमाटर', 'ટામેટાં'],
   Onion: ['Onion', 'प्याज', 'ડુંગળી'],
@@ -104,8 +130,10 @@ const phrases: Record<string, [string, string, string]> = {
   Quantity: ['Quantity', 'मात्रा', 'જથ્થો'],
   Location: ['Location', 'स्थान', 'સ્થાન'],
   Grade: ['Grade', 'ग्रेड', 'ગ્રેડ'],
+  Quintal: ['Quintal (100 kg)', 'क्विंटल (100 किग्रा)', 'ક્વિન્ટલ (100 કિલો)'],
+  kg: ['kg', 'किग्रा', 'કિલો'],
 
-  // Common UI Buttons & Badges
+  // Common UI Buttons & Labels
   'Analyze market': ['Analyze market', 'मंडी का विश्लेषण करें', 'બજારનું વિશ્લેષણ કરો'],
   'Search buyers or locations': ['Search buyers or locations', 'खरीदार या स्थान खोजें', 'ખરીદદારો કે સ્થાન શોધો'],
   Status: ['Status', 'स्थिति', 'સ્થિતિ'],
@@ -115,6 +143,20 @@ const phrases: Record<string, [string, string, string]> = {
   Accepted: ['Accepted', 'स्वीकृत', 'સ્વીકારેલ'],
   Rejected: ['Rejected', 'अस्वीकृत', 'નકારેલ'],
   Completed: ['Completed', 'पूर्ण', 'પૂર્ણ'],
+  Save: ['Save', 'सहेजें', 'સાચવો'],
+  Cancel: ['Cancel', 'रद्द करें', 'રદ કરો'],
+  Refresh: ['Refresh', 'रिफ्रेश करें', 'રીફ્રેશ કરો'],
+  Details: ['Details', 'विवरण', 'વિગતો'],
+  View: ['View', 'देखें', 'જુઓ'],
+  Edit: ['Edit', 'संपादित करें', 'ફેરફાર કરો'],
+
+  // Net Realization Breakdown Terms
+  'Gross Sale Value': ['Gross Sale Value', 'सकल बिक्री मूल्य', 'કુલ વેચાણ મૂલ્ય'],
+  'Transport Freight': ['Transport Freight', 'परिवहन भाड़ा', 'પરિવહન ભાડું'],
+  'Handling & Loading Fees': ['Handling & Loading Fees', 'हमाली और लोडिंग शुल्क', 'હમાલી અને લોડિંગ ચાર્જ'],
+  'APMC Mandi Cess': ['APMC Mandi Cess', 'मंडी शुल्क (सेस)', 'બજાર સમિતિ શેસ'],
+  'Moisture & Spoilage Loss': ['Moisture & Spoilage Loss', 'नमी व पारगमन क्षति', 'ભેજ અને બગાડ નુકસાન'],
+  'Net In-Hand Return': ['Net In-Hand Return', 'शुद्ध हाथ में प्राप्ति', 'ચોખ્ખું હાથમાં વળતર'],
 
   // Buyer Types
   Wholesaler: ['Wholesaler', 'थोक विक्रेता', 'જથ્થાબંધ વેપારી'],
