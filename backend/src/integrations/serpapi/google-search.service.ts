@@ -24,22 +24,29 @@ export async function fetchGoogleSearchEvidence(
 
   if (res.success && res.data?.organic_results) {
     const nowStr = new Date().toISOString()
-    const evidence: NormalizedEvidence[] = res.data.organic_results.slice(0, 4).map((item, idx) => ({
-      id: `GSRC-${idx + 1}-${Date.now().toString(36)}`,
-      sourceType: 'google_search',
-      title: item.title || `${cropName} Market Search Record`,
-      sourceName: item.source || 'Web Agricultural Report',
-      sourceUrl: item.link || 'https://agmarknet.gov.in',
-      snippet: item.snippet || `Market information for ${cropName} in ${location}.`,
-      observedAt: nowStr,
-      publishedAt: item.date || null,
-      cropName,
-      location,
-      signalType: 'MARKET_REPORT',
-      relevance: idx === 0 ? 'high' : 'medium',
-      isLive: true,
-      confidence: idx === 0 ? 88 : 75,
-    }))
+    const evidence: NormalizedEvidence[] = res.data.organic_results.slice(0, 4).map((item, idx) => {
+      const rawSource = (item as any).source
+      const sourceStr = typeof rawSource === 'string'
+        ? rawSource
+        : (rawSource?.name || (item as any).displayed_link || 'Web Agricultural Report')
+
+      return {
+        id: `GSRC-${idx + 1}-${Date.now().toString(36)}`,
+        sourceType: 'google_search',
+        title: item.title || `${cropName} Market Search Record`,
+        sourceName: sourceStr,
+        sourceUrl: item.link || 'https://agmarknet.gov.in',
+        snippet: item.snippet || `Market information for ${cropName} in ${location}.`,
+        observedAt: nowStr,
+        publishedAt: item.date || null,
+        cropName,
+        location,
+        signalType: 'MARKET_REPORT',
+        relevance: idx === 0 ? 'high' : 'medium',
+        isLive: true,
+        confidence: idx === 0 ? 88 : 75,
+      }
+    })
 
     setCachedResult(cacheKey, evidence)
     return { evidence, isLive: true, isCached: false }

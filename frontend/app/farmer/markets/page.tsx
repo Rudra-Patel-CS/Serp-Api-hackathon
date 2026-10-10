@@ -312,7 +312,11 @@ export default function FarmerMarketsPage() {
                     <div key={ev.id} className="bg-stone-50 p-4 rounded-xl border border-stone-200 text-xs flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-between text-stone-500 text-[10px] mb-1">
-                          <span className="font-bold text-emerald-800">{ev.sourceName || ev.source}</span>
+                          <span className="font-bold text-emerald-800">
+                            {typeof ev.sourceName === 'string'
+                              ? ev.sourceName
+                              : ev.sourceName?.name || (typeof ev.source === 'string' ? ev.source : ev.source?.name || 'Live Market Signal')}
+                          </span>
                           <span>{ev.observedAt}</span>
                         </div>
                         <h4 className="font-bold text-stone-900 mb-1 leading-snug">{ev.title}</h4>
