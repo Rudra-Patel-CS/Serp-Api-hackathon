@@ -1,0 +1,398 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  FARMER
+  FPO_MANAGER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum FpoStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum LotStatus {
+  DRAFT
+  READY
+  AGGREGATED
+  PROCUREMENT_PENDING
+  PROCURED
+  DISPATCHED
+  IN_TRANSIT
+  DELIVERED
+  SOLD
+  CANCELLED
+}
+
+enum BuyerType {
+  WHOLESALER
+  TRADER
+  PROCESSOR
+  RETAILER
+  INSTITUTION
+  EXPORTER
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum ShipmentStatus {
+  PENDING
+  DISPATCHED
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id                String          @id @default(uuid())
+  name              String
+  email             String          @unique
+  phone             String          @unique
+  passwordHash      String
+  role              Role
+  status            UserStatus      @default(ACTIVE)
+  avatarUrl         String?
+  preferredLanguage String          @default("en")
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  lastLoginAt       DateTime?
+
+  farmerProfile     FarmerProfile?
+  managedFpo        FPO?            @relation("FpoManager")
+  fpoMemberships    FPOMember[]     @relation("FarmerMemberships")
+  harvestLots       HarvestLot[]    @relation("FarmerLots")
+  notifications     Notification[]  @relation("UserNotifications")
+  auditLogs         AuditLog[]      @relation("UserAuditLogs")
+
+  @@index([phone])
+  @@index([email])
+  @@index([role])
+}
+
+model FarmerProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  village        String
+  taluka         String
+  district       String
+  state          String
+  pincode        String
+  landArea       Float
+  landUnit       String   @default("Acre")
+  primaryCrops   String
+  farmLocationLat Float?
+  farmLocationLng Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FPO {
+  id                 String       @id @default(uuid())
+  name               String
+  registrationNumber String       @unique
+  managerUserId      String       @unique
+  address            String
+  village            String
+  taluka             String
+  district           String
+  state              String
+  pincode            String
+  latitude           Float?
+  longitude          Float?
+  contactPhone       String
+  email              String
+  status             FpoStatus    @default(ACTIVE)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  manager            User         @relation("FpoManager", fields: [managerUserId], references: [id])
+  members            FPOMember[]
+  harvestLots        HarvestLot[] @relation("FpoLots")
+}
+
+model FPOMember {
+  id        String       @id @default(uuid())
+  fpoId     String
+  farmerId  String
+  joinedAt  DateTime     @default(now())
+  status    MemberStatus @default(ACTIVE)
+
+  fpo       FPO          @relation(fields: [fpoId], references: [id], onDelete: Cascade)
+  farmer    User         @relation("FarmerMemberships", fields: [farmerId], references: [id], onDelete: Cascade)
+
+  @@unique([fpoId, farmerId])
+}
+
+model Crop {
+  id            String                 @id @default(uuid())
+  name          String                 @unique
+  localName     String
+  gujaratiName  String
+  hindiName     String
+  category      String
+  shelfLifeDays Int
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  lots          HarvestLot[]
+  prices        MarketPrice[]
+  buyerReqs     BuyerCropRequirement[]
+}
+
+model HarvestLot {
+  id                String       @id @default(uuid())
+  lotNumber         String       @unique
+  farmerId          String
+  fpoId             String?
+  cropId            String
+  quantityKg        Float
+  grade             String
+  moisture          String?
+  farmPlot          String?
+  harvestDate       DateTime
+  expectedReadyDate DateTime?
+  location          String
+  latitude          Float?
+  longitude         Float?
+  status            LotStatus    @default(READY)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  farmer            User         @relation("FarmerLots", fields: [farmerId], references: [id])
+  fpo               FPO?         @relation("FpoLots", fields: [fpoId], references: [id])
+  crop              Crop         @relation(fields: [cropId], references: [id])
+  offers            Offer[]
+  shipments         Shipment[]
+
+  @@index([farmerId])
+  @@index([fpoId])
+  @@index([cropId])
+  @@index([status])
+}
+
+model Market {
+  id          String        @id @default(uuid())
+  name        String
+  marketType  String        @default("APMC_WHOLESALE")
+  city        String
+  district    String
+  state       String
+  latitude    Float
+  longitude   Float
+  distanceKm  Float         @default(0)
+  status      String        @default("ACTIVE")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  prices      MarketPrice[]
+}
+
+model MarketPrice {
+  id          String   @id @default(uuid())
+  marketId    String
+  cropId      String
+  minPrice    Float
+  maxPrice    Float
+  modalPrice  Float
+  unit        String   @default("Quintal")
+  source      String
+  sourceUrl   String?
+  observedAt  DateTime
+  createdAt   DateTime @default(now())
+
+  market      Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  crop        Crop     @relation(fields: [cropId], references: [id], onDelete: Cascade)
+
+  @@index([marketId])
+  @@index([cropId])
+  @@index([observedAt])
+}
+
+model Buyer {
+  id            String                 @id @default(uuid())
+  businessName  String
+  contactName   String
+  phone         String
+  email         String
+  buyerType     BuyerType
+  city          String
+  district      String
+  state         String
+  latitude      Float?
+  longitude     Float?
+  verified      Boolean                @default(true)
+  rating        Float                  @default(4.5)
+  minQuantityKg Float
+  maxQuantityKg Float
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  requirements  BuyerCropRequirement[]
+  offers        Offer[]
+}
+
+model BuyerCropRequirement {
+  id                String   @id @default(uuid())
+  buyerId           String
+  cropId            String
+  minimumQuantityKg Float
+  maximumQuantityKg Float
+  acceptedGrades    String
+  targetPrice       Float
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  buyer             Buyer    @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  crop              Crop     @relation(fields: [cropId], references: [id], onDelete: Cascade)
+}
+
+model Offer {
+  id           String      @id @default(uuid())
+  lotId        String
+  buyerId      String
+  offeredPrice Float
+  quantityKg   Float
+  status       OfferStatus @default(PENDING)
+  expiresAt    DateTime
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  lot          HarvestLot  @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  buyer        Buyer       @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+
+  @@index([lotId])
+  @@index([buyerId])
+  @@index([status])
+}
+
+model LogisticsProvider {
+  id            String             @id @default(uuid())
+  name          String
+  contactPerson String
+  phone         String
+  email         String
+  rating        Float              @default(4.8)
+  status        String             @default("ACTIVE")
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  vehicles      TransportVehicle[]
+  shipments     Shipment[]
+}
+
+model TransportVehicle {
+  id            String            @id @default(uuid())
+  providerId    String
+  vehicleNumber String            @unique
+  vehicleType   String
+  capacityKg    Float
+  status        String            @default("AVAILABLE")
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  provider      LogisticsProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  shipments     Shipment[]
+}
+
+model Shipment {
+  id              String             @id @default(uuid())
+  lotId           String
+  providerId      String
+  vehicleId       String
+  pickupLocation  String
+  pickupLat       Float
+  pickupLng       Float
+  destination     String
+  destinationLat  Float
+  destinationLng  Float
+  status          ShipmentStatus     @default(PENDING)
+  estimatedArrival DateTime?
+  actualArrival   DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  lot             HarvestLot         @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  provider        LogisticsProvider  @relation(fields: [providerId], references: [id])
+  vehicle         TransportVehicle   @relation(fields: [vehicleId], references: [id])
+  locations       ShipmentLocation[]
+
+  @@index([lotId])
+  @@index([status])
+}
+
+model ShipmentLocation {
+  id         String   @id @default(uuid())
+  shipmentId String
+  latitude   Float
+  longitude  Float
+  speed      Float    @default(0)
+  heading    Float    @default(0)
+  accuracy   Float    @default(5)
+  recordedAt DateTime @default(now())
+
+  shipment   Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  @@index([shipmentId])
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  type       String
+  title      String
+  message    String
+  entityType String?
+  entityId   String?
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user       User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  metadata   String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation("UserAuditLogs", fields: [userId], references: [id], onDelete: SetNull)
+}

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const fpo_controller_1 = require("../controllers/fpo.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const client_1 = require("@prisma/client");
+const router = (0, express_1.Router)();
+router.get('/', auth_middleware_1.authenticate, fpo_controller_1.getFpos);
+router.get('/me/farmers', auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)(client_1.Role.FPO_MANAGER, client_1.Role.ADMIN), fpo_controller_1.getFpoFarmers);
+router.get('/me/lots', auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)(client_1.Role.FPO_MANAGER, client_1.Role.ADMIN), fpo_controller_1.getFpoLots);
+router.get('/:id', auth_middleware_1.authenticate, fpo_controller_1.getFpoById);
+exports.default = router;

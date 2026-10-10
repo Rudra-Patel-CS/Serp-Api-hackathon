@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const farmer_controller_1 = require("../controllers/farmer.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const client_1 = require("@prisma/client");
+const router = (0, express_1.Router)();
+router.get('/me', auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)(client_1.Role.FARMER, client_1.Role.ADMIN), farmer_controller_1.getFarmerProfile);
+router.patch('/me', auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)(client_1.Role.FARMER, client_1.Role.ADMIN), farmer_controller_1.updateFarmerProfile);
+router.get('/me/lots', auth_middleware_1.authenticate, (0, auth_middleware_1.authorize)(client_1.Role.FARMER, client_1.Role.ADMIN), farmer_controller_1.getFarmerLots);
+exports.default = router;

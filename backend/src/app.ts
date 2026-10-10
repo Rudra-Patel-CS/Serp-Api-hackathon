@@ -1,0 +1,54 @@
+import express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import cookieParser from 'cookie-parser'
+import { config } from './config'
+import { errorHandler } from './middleware/error.middleware'
+
+import authRoutes from './routes/auth.routes'
+import farmerRoutes from './routes/farmer.routes'
+import fpoRoutes from './routes/fpo.routes'
+import lotRoutes from './routes/lot.routes'
+import marketRoutes from './routes/market.routes'
+import intelligenceRoutes from './routes/intelligence.routes'
+import buyerRoutes from './routes/buyer.routes'
+import offerRoutes from './routes/offer.routes'
+import logisticsRoutes from './routes/logistics.routes'
+import alertRoutes from './routes/alert.routes'
+import adminRoutes from './routes/admin.routes'
+
+const app = express()
+
+app.use(helmet({ crossOriginResourcePolicy: false }))
+app.use(
+  cors({
+    origin: [config.frontendUrl, 'http://localhost:3000', 'http://localhost:3001'],
+    credentials: true,
+  })
+)
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+
+// Healthcheck Route
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', system: 'KrishiIntel Express Backend API', timestamp: new Date() })
+})
+
+// API Domain Routers
+app.use('/api/auth', authRoutes)
+app.use('/api/farmers', farmerRoutes)
+app.use('/api/fpos', fpoRoutes)
+app.use('/api/lots', lotRoutes)
+app.use('/api/markets', marketRoutes)
+app.use('/api/market-intelligence', intelligenceRoutes)
+app.use('/api/buyers', buyerRoutes)
+app.use('/api/offers', offerRoutes)
+app.use('/api/logistics', logisticsRoutes)
+app.use('/api/alerts', alertRoutes)
+app.use('/api/admin', adminRoutes)
+
+// Error Handler Middleware
+app.use(errorHandler)
+
+export default app

@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const intelligence_controller_1 = require("../controllers/intelligence.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const router = (0, express_1.Router)();
+router.post('/analyze', auth_middleware_1.authenticate, intelligence_controller_1.analyzeMarketOpportunity);
+router.get('/evidence', auth_middleware_1.authenticate, intelligence_controller_1.getEvidenceRecords);
+exports.default = router;
