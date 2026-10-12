@@ -29,7 +29,15 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-// Healthcheck Route
+// Root & Healthcheck Routes
+app.get('/', (req, res) => {
+    res.json({
+        status: 'online',
+        message: 'KrishiIntel Backend API Server is running successfully.',
+        healthCheck: '/api/health',
+        timestamp: new Date(),
+    });
+});
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', system: 'KrishiIntel Express Backend API', timestamp: new Date() });
 });

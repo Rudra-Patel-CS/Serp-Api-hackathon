@@ -30,7 +30,16 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-// Healthcheck Route
+// Root & Healthcheck Routes
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    message: 'KrishiIntel Backend API Server is running successfully.',
+    healthCheck: '/api/health',
+    timestamp: new Date(),
+  })
+})
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', system: 'KrishiIntel Express Backend API', timestamp: new Date() })
 })
