@@ -96,16 +96,19 @@ Visit **http://localhost:3000** in your browser!
 
 ---
 
-## 🔍 SerpApi Integration Details
+## 🔍 SerpApi Feature-by-Feature Integration Mapping
 
-SerpApi requests are handled **100% server-side** in [`backend/src/integrations/serpapi/`](./backend/src/integrations/serpapi/):
-- **`serpapi.client.ts`**: Shared HTTP client with timeouts, status code handling, retries, and API key protection.
-- **`serpapi-cache.service.ts`**: In-memory TTL caching (30 min default) to prevent unnecessary API quota consumption.
-- **`google-search.service.ts`**: Normalizes `engine=google` search results into `NormalizedEvidence`.
-- **`google-news.service.ts`**: Normalizes `engine=google_news` results into `NormalizedEvidence`.
-- **`google-maps.service.ts`**: Discovers candidate leads (`DiscoveredLead`) for buyers, processing plants, cold storage, and logistics.
+KrishiIntel leverages **SerpApi** across multiple core features to provide real-time, external web intelligence directly to farmers and FPO managers:
 
-`SERPAPI_KEY` is **never** sent to the client browser or exposed in frontend bundles.
+| Platform Feature | SerpApi Engine Used | How It Works & Value Delivered |
+|---|---|---|
+| **1. APMC Mandi Price Intelligence & Trends** | **Google Search (`engine=google`)** | Fetches live wholesale market price bulletins, arrival volumes, and commodity trends across regional Gujarat mandis (Rajkot, Gondal, Unjha, Surat, Ahmedabad) to supplement local database records. |
+| **2. Agri News, Disruption & Policy Alerts** | **Google News (`engine=google_news`)** | Scrapes real-time agricultural news, monsoon/weather updates, export duty changes, and supply-chain disruption alerts so farmers can decide the optimal day to harvest and sell. |
+| **3. Direct Buyer & Food Processor Discovery** | **Google Maps (`engine=google_maps`)** | Discovers regional food processing plants, agro-exporters, grain millers, and wholesale traders. Extracts verified business names, addresses, phone contacts, ratings, and GPS coordinates. |
+| **4. Cold Storage & Warehouse Locator** | **Google Maps (`engine=google_maps`)** | Identifies nearby commercial cold storage facilities and warehouse units with capacity indicators to minimize post-harvest crop spoilage during price dips. |
+| **5. Local Logistics & Transporter Matching** | **Google Maps (`engine=google_maps`)** | Finds local agricultural transport operators, mini-truck aggregators, and freight booking offices along the selected transit route to accurately calculate net realization. |
+
+> 🔒 **Security Guarantee:** All SerpApi calls are executed strictly server-side through [`backend/src/integrations/serpapi/`](./backend/src/integrations/serpapi/). The `SERPAPI_KEY` is never exposed to the client browser, and results are cached with a 30-minute in-memory TTL to conserve API quotas.
 
 ---
 
@@ -134,6 +137,13 @@ Serp-Api-hackathon/
 ├── docs/                     # Full Technical Documentation Architecture
 └── README.md
 ```
+
+---
+
+## 👨‍💻 Creators & Team
+
+- **Rudra Patel**
+- **Abhishek Chikhaliya**
 
 ---
 
