@@ -22,7 +22,9 @@
 - 🛰️ **Real-Time Logistics Telemetry**: Live vehicle dispatch & GPS snapshot tracking powered by Socket.IO.
 
 ---
-
+Check the Deployed Site:
+https://krishiintel.onrender.com
+---
 ## 🚀 Quick Start Guide for Collaborators
 
 ### 1. Prerequisites
