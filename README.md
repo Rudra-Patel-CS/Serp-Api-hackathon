@@ -23,7 +23,7 @@
 
 ---
 Check the Deployed Site:
-https://krishiintel.onrender.com
+https://krishi-intel-cody.onrender.com
 ---
 ## 🚀 Quick Start Guide for Collaborators
 
