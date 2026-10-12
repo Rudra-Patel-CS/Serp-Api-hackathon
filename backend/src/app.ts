@@ -22,8 +22,22 @@ const app = express()
 app.use(helmet({ crossOriginResourcePolicy: false }))
 app.use(
   cors({
-    origin: [config.frontendUrl, 'http://localhost:3000', 'http://localhost:3001'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, postman)
+      if (!origin) return callback(null, true)
+      // Allow localhost, any *.onrender.com domain, or custom FRONTEND_URL
+      if (
+        origin.includes('localhost') ||
+        origin.endsWith('.onrender.com') ||
+        origin === config.frontendUrl
+      ) {
+        return callback(null, true)
+      }
+      return callback(null, true)
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 )
 app.use(express.json())

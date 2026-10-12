@@ -23,8 +23,21 @@ const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)({ crossOriginResourcePolicy: false }));
 app.use((0, cors_1.default)({
-    origin: [config_1.config.frontendUrl, 'http://localhost:3000', 'http://localhost:3001'],
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. mobile apps, curl, postman)
+        if (!origin)
+            return callback(null, true);
+        // Allow localhost, any *.onrender.com domain, or custom FRONTEND_URL
+        if (origin.includes('localhost') ||
+            origin.endsWith('.onrender.com') ||
+            origin === config_1.config.frontendUrl) {
+            return callback(null, true);
+        }
+        return callback(null, true);
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
