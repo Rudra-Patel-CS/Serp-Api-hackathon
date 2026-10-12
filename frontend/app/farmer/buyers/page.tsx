@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { FarmerShell } from '@/components/farmer/FarmerShell'
 import { getBuyersApi, createOfferApi, getFarmerLotsApi } from '@/services/api/krishi-api'
 import { toast } from 'sonner'
-import { Users, ShieldCheck, Phone, MapPin, Tag, Star, Loader2 } from 'lucide-react'
+import { Users, ShieldCheck, Phone, MapPin, Tag, Star, Loader2, ChevronDown } from 'lucide-react'
 
 export default function FarmerBuyersPage() {
   const [buyers, setBuyers] = useState<any[]>([])
@@ -140,8 +140,8 @@ export default function FarmerBuyersPage() {
                   {/* Requirements List */}
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 text-xs space-y-1.5 mb-4">
                     <div className="font-bold text-stone-700">Buying Requirements:</div>
-                    {buyer.requirements?.map((req: any) => (
-                      <div key={req.id} className="flex justify-between text-[11px] text-stone-600">
+                    {buyer.requirements?.map((req: any, index: number) => (
+                      <div key={req.id || `buyer-${buyer.id || 'b'}-req-${index}`} className="flex justify-between text-[11px] text-stone-600">
                         <span>{req.crop?.name || 'Crop'} ({req.acceptedGrades})</span>
                         <span className="font-bold text-emerald-700">Target: ₹{req.targetPrice}/kg</span>
                       </div>
@@ -170,29 +170,51 @@ export default function FarmerBuyersPage() {
 
               <form onSubmit={handleMakeOffer} className="space-y-4 text-xs">
                 <div>
-                  <label className="block font-semibold text-stone-700 mb-1">Select Harvest Lot *</label>
-                  <select
-                    value={selectedLotId}
-                    onChange={(e) => setSelectedLotId(e.target.value)}
-                    className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900"
-                  >
-                    {lots.map((l) => (
-                      <option key={l.id} value={l.id}>
-                        {l.lotNumber} - {l.crop?.name} ({l.quantityKg} kg)
-                      </option>
-                    ))}
-                  </select>
+                  <label className="block font-semibold text-stone-700 mb-1.5 text-xs">
+                    Select Harvest Lot *
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedLotId}
+                      onChange={(e) => setSelectedLotId(e.target.value)}
+                      required
+                      className="w-full appearance-none bg-white border border-stone-300 hover:border-stone-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 focus:outline-none rounded-xl px-3.5 py-2.5 pr-10 text-stone-900 text-xs font-medium transition-all shadow-sm cursor-pointer"
+                    >
+                      {lots.length === 0 ? (
+                        <option value="" disabled>
+                          No harvest lots available (Please add a lot first)
+                        </option>
+                      ) : (
+                        lots.map((l) => (
+                          <option key={l.id} value={l.id}>
+                            {l.lotNumber} — {l.crop?.name || 'Crop'} ({l.quantityKg} kg)
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-stone-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
+                  {lots.length === 0 && (
+                    <p className="text-[11px] text-amber-600 mt-1">
+                      ⚠️ You do not have any registered harvest lots yet. Please register a harvest lot first.
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-stone-700 mb-1">Offered Price (₹ / kg) *</label>
+                  <label className="block font-semibold text-stone-700 mb-1.5 text-xs">
+                    Offered Price (₹ / kg) *
+                  </label>
                   <input
                     type="number"
                     step="0.5"
                     value={offeredPrice}
                     onChange={(e) => setOfferedPrice(e.target.value)}
                     required
-                    className="w-full border border-stone-300 rounded-lg p-2.5 text-stone-900 font-bold text-sm"
+                    placeholder="Enter price per kg"
+                    className="w-full bg-white border border-stone-300 hover:border-stone-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 focus:outline-none rounded-xl px-3.5 py-2.5 text-stone-900 font-bold text-sm transition-all shadow-sm"
                   />
                 </div>
 

@@ -19,22 +19,28 @@ async function fetchGoogleNewsEvidence(cropName, location) {
     });
     if (res.success && res.data?.news_results) {
         const nowStr = new Date().toISOString();
-        const evidence = res.data.news_results.slice(0, 4).map((item, idx) => ({
-            id: `GNEWS-${idx + 1}-${Date.now().toString(36)}`,
-            sourceType: 'google_news',
-            title: item.title || `${cropName} News Update`,
-            sourceName: item.source || 'Agri News Publication',
-            sourceUrl: item.link || 'https://agmarknet.gov.in',
-            snippet: item.snippet || `Latest market news regarding ${cropName} in ${location}.`,
-            observedAt: nowStr,
-            publishedAt: item.date || null,
-            cropName,
-            location,
-            signalType: 'NEWS_ALERT',
-            relevance: idx === 0 ? 'high' : 'medium',
-            isLive: true,
-            confidence: idx === 0 ? 90 : 80,
-        }));
+        const evidence = res.data.news_results.slice(0, 4).map((item, idx) => {
+            const rawSource = item.source;
+            const sourceStr = typeof rawSource === 'string'
+                ? rawSource
+                : (rawSource?.name || 'Agri News Publication');
+            return {
+                id: `GNEWS-${idx + 1}-${Date.now().toString(36)}`,
+                sourceType: 'google_news',
+                title: item.title || `${cropName} News Update`,
+                sourceName: sourceStr,
+                sourceUrl: item.link || 'https://agmarknet.gov.in',
+                snippet: item.snippet || `Latest market news regarding ${cropName} in ${location}.`,
+                observedAt: nowStr,
+                publishedAt: item.date || null,
+                cropName,
+                location,
+                signalType: 'NEWS_ALERT',
+                relevance: idx === 0 ? 'high' : 'medium',
+                isLive: true,
+                confidence: idx === 0 ? 90 : 80,
+            };
+        });
         (0, serpapi_cache_service_1.setCachedResult)(cacheKey, evidence);
         return { evidence, isLive: true, isCached: false };
     }

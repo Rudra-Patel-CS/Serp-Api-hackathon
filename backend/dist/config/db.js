@@ -11,10 +11,10 @@ const client_1 = require("@prisma/client");
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../.env') });
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env') });
 dotenv_1.default.config();
-let dbUrl = process.env.DATABASE_URL || 'mysql://root:password@localhost:3306/krishiintel';
+let dbUrl = process.env.DATABASE_URL || 'mysql://root:password@localhost:3307/krishiintel';
 // Guard against legacy file:./dev.db sqlite URLs when Prisma schema requires MySQL
 if (!dbUrl || dbUrl.startsWith('file:')) {
-    dbUrl = 'mysql://root:password@localhost:3306/krishiintel';
+    dbUrl = 'mysql://root:password@localhost:3307/krishiintel';
 }
 exports.prisma = new client_1.PrismaClient({
     datasources: {
